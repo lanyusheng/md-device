@@ -29,7 +29,7 @@ export default function LoginPage() {
 
       const response = await authService.login({
         username,
-        password,
+        password
       });
 
       // Code === 0 表示成功
@@ -39,10 +39,15 @@ export default function LoginPage() {
         router.refresh();
       } else {
         // 非 0 时，Result 字段是错误提示
-        toast.error(response.Result || response.Message || '用户名或密码错误');
+        const errorMsg =
+          typeof response.Result === 'string'
+            ? response.Result
+            : response.Message || '用户名或密码错误';
+        toast.error(errorMsg);
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : '登录失败，请重试';
+      const errorMessage =
+        error instanceof Error ? error.message : '登录失败，请重试';
       toast.error(errorMessage);
     } finally {
       setLoading(false);
@@ -50,197 +55,208 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className='flex min-h-screen'>
       {/* Left Side - Illustration (Desktop Only) */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-muted items-center justify-center overflow-hidden">
+      <div className='bg-muted relative hidden items-center justify-center overflow-hidden lg:flex lg:w-1/2'>
         {/* Decorative Background Elements */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-primary/10 to-background">
-          <div className="absolute top-20 left-20 w-32 h-32 bg-primary/5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-40 right-20 w-40 h-40 bg-primary/5 rounded-full blur-3xl"></div>
-          <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-primary/10 rounded-full blur-2xl"></div>
+        <div className='from-primary/20 via-primary/10 to-background absolute inset-0 bg-gradient-to-br'>
+          <div className='bg-primary/5 absolute top-20 left-20 h-32 w-32 rounded-full blur-3xl'></div>
+          <div className='bg-primary/5 absolute right-20 bottom-40 h-40 w-40 rounded-full blur-3xl'></div>
+          <div className='bg-primary/10 absolute top-1/2 left-1/4 h-24 w-24 rounded-full blur-2xl'></div>
         </div>
 
         {/* Main Illustration Area */}
-        <div className="relative z-10 flex flex-col items-center justify-center space-y-8 px-12">
+        <div className='relative z-10 flex flex-col items-center justify-center space-y-8 px-12'>
           {/* Character Illustration Placeholder */}
-          <div className="relative">
-            <div className="w-64 h-64 bg-card/50 backdrop-blur-sm rounded-full border border-border shadow-lg flex items-center justify-center">
-              <div className="text-8xl">👤</div>
+          <div className='relative'>
+            <div className='bg-card/50 border-border flex h-64 w-64 items-center justify-center rounded-full border shadow-lg backdrop-blur-sm'>
+              <div className='text-8xl'>👤</div>
             </div>
           </div>
 
           {/* Stats Cards */}
-          <div className="flex gap-6">
-            <div className="bg-card/80 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-border">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <TrendingUp className="w-5 h-5 text-primary" />
+          <div className='flex gap-6'>
+            <div className='bg-card/80 border-border rounded-xl border p-4 shadow-lg backdrop-blur-sm'>
+              <div className='flex items-center gap-3'>
+                <div className='bg-primary/10 flex h-10 w-10 items-center justify-center rounded-lg'>
+                  <TrendingUp className='text-primary h-5 w-5' />
                 </div>
                 <div>
-                  <p className="text-muted-foreground text-xs">Total Users</p>
-                  <p className="text-foreground font-bold text-lg">2,856</p>
-                  <p className="text-chart-2 text-xs">↑ 12.5%</p>
+                  <p className='text-muted-foreground text-xs'>Total Users</p>
+                  <p className='text-foreground text-lg font-bold'>2,856</p>
+                  <p className='text-chart-2 text-xs'>↑ 12.5%</p>
                 </div>
               </div>
             </div>
-            <div className="bg-card/80 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-border">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <FolderKanban className="w-5 h-5 text-primary" />
+            <div className='bg-card/80 border-border rounded-xl border p-4 shadow-lg backdrop-blur-sm'>
+              <div className='flex items-center gap-3'>
+                <div className='bg-primary/10 flex h-10 w-10 items-center justify-center rounded-lg'>
+                  <FolderKanban className='text-primary h-5 w-5' />
                 </div>
                 <div>
-                  <p className="text-muted-foreground text-xs">Projects</p>
-                  <p className="text-foreground font-bold text-lg">862</p>
-                  <p className="text-muted-foreground text-xs">Yearly</p>
+                  <p className='text-muted-foreground text-xs'>Projects</p>
+                  <p className='text-foreground text-lg font-bold'>862</p>
+                  <p className='text-muted-foreground text-xs'>Yearly</p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Profit Chart */}
-          <div className="bg-card/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-border">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                <BarChart3 className="w-5 h-5 text-primary" />
+          <div className='bg-card/80 border-border rounded-xl border p-6 shadow-lg backdrop-blur-sm'>
+            <div className='mb-3 flex items-center gap-2'>
+              <div className='bg-primary/10 flex h-10 w-10 items-center justify-center rounded-lg'>
+                <BarChart3 className='text-primary h-5 w-5' />
               </div>
               <div>
-                <p className="text-foreground font-semibold text-xl">$86.4k</p>
-                <p className="text-muted-foreground text-xs">Total Profit</p>
+                <p className='text-foreground text-xl font-semibold'>$86.4k</p>
+                <p className='text-muted-foreground text-xs'>Total Profit</p>
               </div>
             </div>
-            <div className="flex items-end justify-center gap-2 h-20">
-              <div className="w-3 bg-chart-2 rounded-t" style={{ height: '40%' }}></div>
-              <div className="w-3 bg-chart-2 rounded-t" style={{ height: '60%' }}></div>
-              <div className="w-3 bg-chart-2 rounded-t" style={{ height: '45%' }}></div>
-              <div className="w-3 bg-chart-2 rounded-t" style={{ height: '80%' }}></div>
-              <div className="w-3 bg-chart-2 rounded-t" style={{ height: '100%' }}></div>
+            <div className='flex h-20 items-end justify-center gap-2'>
+              <div
+                className='bg-chart-2 w-3 rounded-t'
+                style={{ height: '40%' }}
+              ></div>
+              <div
+                className='bg-chart-2 w-3 rounded-t'
+                style={{ height: '60%' }}
+              ></div>
+              <div
+                className='bg-chart-2 w-3 rounded-t'
+                style={{ height: '45%' }}
+              ></div>
+              <div
+                className='bg-chart-2 w-3 rounded-t'
+                style={{ height: '80%' }}
+              ></div>
+              <div
+                className='bg-chart-2 w-3 rounded-t'
+                style={{ height: '100%' }}
+              ></div>
             </div>
           </div>
         </div>
 
         {/* Bottom Decoration */}
-        <div className="absolute bottom-0 left-0 w-24 h-24 opacity-20">
-          <div className="w-full h-full">
-            <div className="w-16 h-16 bg-primary rounded-tr-full"></div>
-            <div className="w-12 h-12 bg-primary/60 rounded-tr-full -mt-12"></div>
-            <div className="w-8 h-8 bg-primary/30 rounded-tr-full -mt-8"></div>
+        <div className='absolute bottom-0 left-0 h-24 w-24 opacity-20'>
+          <div className='h-full w-full'>
+            <div className='bg-primary h-16 w-16 rounded-tr-full'></div>
+            <div className='bg-primary/60 -mt-12 h-12 w-12 rounded-tr-full'></div>
+            <div className='bg-primary/30 -mt-8 h-8 w-8 rounded-tr-full'></div>
           </div>
         </div>
       </div>
 
       {/* Right Side - Login Form */}
-      <div className="flex-1 flex items-center justify-center bg-background px-4 py-8 lg:px-8">
-        <div className="w-full max-w-md space-y-6">
+      <div className='bg-background flex flex-1 items-center justify-center px-4 py-8 lg:px-8'>
+        <div className='w-full max-w-md space-y-6'>
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-primary-foreground font-bold text-xl">
+          <div className='flex items-center gap-2'>
+            <div className='bg-primary text-primary-foreground flex h-10 w-10 items-center justify-center rounded-lg text-xl font-bold'>
               S
             </div>
-            <span className="text-2xl font-bold text-foreground">Shadcn Dashboard</span>
+            <span className='text-foreground text-2xl font-bold'>
+              Shadcn Dashboard
+            </span>
           </div>
 
           {/* Welcome Text */}
-          <div className="space-y-2">
-            <h1 className="text-3xl lg:text-4xl font-bold text-foreground">
+          <div className='space-y-2'>
+            <h1 className='text-foreground text-3xl font-bold lg:text-4xl'>
               欢迎回来! 👋
             </h1>
-            <p className="text-muted-foreground">
-              请登录您的账户开始使用系统
-            </p>
+            <p className='text-muted-foreground'>请登录您的账户开始使用系统</p>
           </div>
 
           {/* Login Hint */}
-          <div className="bg-muted border border-border rounded-lg p-4">
-            <p className="text-sm text-muted-foreground">
+          <div className='bg-muted border-border rounded-lg border p-4'>
+            <p className='text-muted-foreground text-sm'>
               请使用您的账号密码登录系统
             </p>
           </div>
 
           {/* Login Form */}
-          <form onSubmit={onSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="username" className="text-sm font-medium">
+          <form onSubmit={onSubmit} className='space-y-4'>
+            <div className='space-y-2'>
+              <Label htmlFor='username' className='text-sm font-medium'>
                 用户名
               </Label>
               <Input
-                id="username"
-                name="username"
-                type="text"
-                placeholder="admin"
-                defaultValue="admin"
+                id='username'
+                name='username'
+                type='text'
+                placeholder='admin'
+                defaultValue='admin'
                 required
-                autoComplete="username"
+                autoComplete='username'
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-sm font-medium">
+            <div className='space-y-2'>
+              <Label htmlFor='password' className='text-sm font-medium'>
                 密码
               </Label>
-              <div className="relative">
+              <div className='relative'>
                 <Input
-                  id="password"
-                  name="password"
+                  id='password'
+                  name='password'
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="••••••••"
-                  defaultValue="111111"
+                  placeholder='••••••••'
+                  defaultValue='111111'
                   required
-                  autoComplete="current-password"
-                  className="pr-10"
+                  autoComplete='current-password'
+                  className='pr-10'
                 />
                 <button
-                  type="button"
+                  type='button'
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  className='text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 transition-colors'
                 >
                   {showPassword ? (
-                    <EyeOff className="h-4 w-4" />
+                    <EyeOff className='h-4 w-4' />
                   ) : (
-                    <Eye className="h-4 w-4" />
+                    <Eye className='h-4 w-4' />
                   )}
                 </button>
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
+            <div className='flex items-center justify-between'>
+              <div className='flex items-center space-x-2'>
                 <Checkbox
-                  id="remember"
+                  id='remember'
                   checked={rememberMe}
-                  onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+                  onCheckedChange={(checked) =>
+                    setRememberMe(checked as boolean)
+                  }
                 />
                 <label
-                  htmlFor="remember"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                  htmlFor='remember'
+                  className='cursor-pointer text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
                 >
                   记住我
                 </label>
               </div>
               <a
-                href="#"
-                className="text-sm text-primary hover:underline font-medium"
+                href='#'
+                className='text-primary text-sm font-medium hover:underline'
               >
                 忘记密码?
               </a>
             </div>
 
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={loading}
-            >
+            <Button type='submit' className='w-full' disabled={loading}>
               {loading ? '登录中...' : '登录'}
             </Button>
           </form>
 
           {/* Create Account Link */}
-          <div className="text-center">
-            <span className="text-sm text-muted-foreground">
-              还没有账户?{' '}
-            </span>
+          <div className='text-center'>
+            <span className='text-muted-foreground text-sm'>还没有账户? </span>
             <a
-              href="#"
-              className="text-sm text-primary hover:underline font-medium"
+              href='#'
+              className='text-primary text-sm font-medium hover:underline'
             >
               立即注册
             </a>
