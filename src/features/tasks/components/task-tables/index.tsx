@@ -3,7 +3,6 @@
 import { DataTable } from '@/components/ui/table/data-table';
 import { Task } from '@/types/task';
 import { ColumnDef, FilterFn } from '@tanstack/react-table';
-import { parseAsInteger, useQueryState } from 'nuqs';
 import {
   getCoreRowModel,
   getFacetedRowModel,

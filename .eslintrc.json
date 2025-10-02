@@ -10,7 +10,15 @@
   },
   "overrides": [
     {
-      "files": ["src/app/api/**/*.ts", "src/hooks/**/*.ts", "src/lib/**/*.ts", "src/services/**/*.ts", "src/features/**/store/*.ts"],
+      "files": [
+        "src/app/api/**/*.ts",
+        "src/hooks/**/*.ts",
+        "src/lib/**/*.ts",
+        "src/services/**/*.ts",
+        "src/features/**/store/*.ts",
+        "src/components/forms/demo-form.tsx",
+        "src/features/**/components/**/*drawer.tsx"
+      ],
       "rules": {
         "no-console": "off"
       }
