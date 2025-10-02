@@ -24,21 +24,26 @@ export default function LoginPage() {
     const password = formData.get('password') as string;
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
+      // 动态导入 authService 以避免 SSR 问题
+      const { authService } = await import('@/services/auth.service');
+
+      const response = await authService.login({
+        username,
+        password,
       });
 
-      if (response.ok) {
+      // Code === 0 表示成功
+      if (response.Code === 0) {
         toast.success('登录成功');
         router.push('/dashboard');
         router.refresh();
       } else {
-        toast.error('用户名或密码错误');
+        // 非 0 时，Result 字段是错误提示
+        toast.error(response.Result || response.Message || '用户名或密码错误');
       }
     } catch (error) {
-      toast.error('登录失败,请重试');
+      const errorMessage = error instanceof Error ? error.message : '登录失败，请重试';
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -144,10 +149,10 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* Demo Credentials */}
+          {/* Login Hint */}
           <div className="bg-muted border border-border rounded-lg p-4">
             <p className="text-sm text-muted-foreground">
-              默认账号: <span className="text-foreground font-medium">admin / aa123456</span>
+              请使用您的账号密码登录系统
             </p>
           </div>
 
@@ -162,6 +167,7 @@ export default function LoginPage() {
                 name="username"
                 type="text"
                 placeholder="admin"
+                defaultValue="admin"
                 required
                 autoComplete="username"
               />
@@ -177,6 +183,7 @@ export default function LoginPage() {
                   name="password"
                   type={showPassword ? 'text' : 'password'}
                   placeholder="••••••••"
+                  defaultValue="111111"
                   required
                   autoComplete="current-password"
                   className="pr-10"

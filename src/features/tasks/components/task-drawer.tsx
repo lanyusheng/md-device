@@ -5,15 +5,14 @@ import { FormSelect } from '@/components/forms/form-select';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle
-} from '@/components/ui/drawer';
-import { useMediaQuery } from '@/hooks/use-media-query';
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle
+} from '@/components/ui/sheet';
 import { Task, taskLabels, taskPriorities, taskStatuses } from '@/types/task';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -37,8 +36,6 @@ interface TaskDrawerProps {
 }
 
 export function TaskDrawer({ open, onOpenChange, initialData }: TaskDrawerProps) {
-  const { isDesktop } = useMediaQuery();
-
   const defaultValues = {
     title: initialData?.title || '',
     status: initialData?.status || 'todo',
@@ -79,86 +76,82 @@ export function TaskDrawer({ open, onOpenChange, initialData }: TaskDrawerProps)
   }
 
   return (
-    <Drawer
-      open={open}
-      onOpenChange={onOpenChange}
-      direction={isDesktop ? 'right' : 'bottom'}
-    >
-      <DrawerContent className={isDesktop ? 'sm:max-w-md' : ''}>
-        <div className={isDesktop ? 'h-full overflow-auto' : 'mx-auto w-full max-w-2xl'}>
-          <DrawerHeader>
-            <DrawerTitle>
-              {initialData ? `编辑任务 - ${initialData.id}` : '创建新任务'}
-            </DrawerTitle>
-            <DrawerDescription>
-              {initialData ? '更新任务信息' : '添加新任务到列表'}
-            </DrawerDescription>
-          </DrawerHeader>
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent side='right' className='sm:max-w-lg'>
+        <SheetHeader>
+          <SheetTitle>
+            {initialData ? `编辑任务 - ${initialData.id}` : '创建新任务'}
+          </SheetTitle>
+          <SheetDescription>
+            {initialData ? '更新任务信息' : '添加新任务到列表'}
+          </SheetDescription>
+        </SheetHeader>
 
-          <div className='p-4 pb-0'>
-            <Form
-              form={form}
-              onSubmit={form.handleSubmit(onSubmit)}
-              className='space-y-6'
-            >
-              <FormInput
+        <div className='flex-1 overflow-y-auto py-4'>
+          <Form
+            form={form}
+            onSubmit={form.handleSubmit(onSubmit)}
+            className='space-y-6'
+          >
+            <FormInput
+              control={form.control}
+              name='title'
+              label='任务标题'
+              placeholder='输入任务标题'
+              required
+            />
+
+            <div className='grid grid-cols-1 gap-4'>
+              <FormSelect
                 control={form.control}
-                name='title'
-                label='任务标题'
-                placeholder='输入任务标题'
+                name='status'
+                label='状态'
+                placeholder='选择状态'
                 required
+                options={taskStatuses.map((s) => ({
+                  label: s.label,
+                  value: s.value
+                }))}
               />
 
-              <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
-                <FormSelect
-                  control={form.control}
-                  name='status'
-                  label='状态'
-                  placeholder='选择状态'
-                  required
-                  options={taskStatuses.map((s) => ({
-                    label: s.label,
-                    value: s.value
-                  }))}
-                />
+              <FormSelect
+                control={form.control}
+                name='label'
+                label='标签'
+                placeholder='选择标签'
+                required
+                options={taskLabels.map((l) => ({
+                  label: l.label,
+                  value: l.value
+                }))}
+              />
 
-                <FormSelect
-                  control={form.control}
-                  name='label'
-                  label='标签'
-                  placeholder='选择标签'
-                  required
-                  options={taskLabels.map((l) => ({
-                    label: l.label,
-                    value: l.value
-                  }))}
-                />
+              <FormSelect
+                control={form.control}
+                name='priority'
+                label='优先级'
+                placeholder='选择优先级'
+                required
+                options={taskPriorities.map((p) => ({
+                  label: p.label,
+                  value: p.value
+                }))}
+              />
+            </div>
 
-                <FormSelect
-                  control={form.control}
-                  name='priority'
-                  label='优先级'
-                  placeholder='选择优先级'
-                  required
-                  options={taskPriorities.map((p) => ({
-                    label: p.label,
-                    value: p.value
-                  }))}
-                />
-              </div>
-
-              <DrawerFooter className='px-0'>
-                <Button type='submit'>
-                  {initialData ? '更新任务' : '创建任务'}
+            <SheetFooter>
+              <SheetClose asChild>
+                <Button type='button' variant='outline'>
+                  取消
                 </Button>
-                <DrawerClose asChild>
-                  <Button variant='outline'>取消</Button>
-                </DrawerClose>
-              </DrawerFooter>
-            </Form>
-          </div>
+              </SheetClose>
+              <Button type='submit'>
+                {initialData ? '更新任务' : '创建任务'}
+              </Button>
+            </SheetFooter>
+          </Form>
         </div>
-      </DrawerContent>
-    </Drawer>
+      </SheetContent>
+    </Sheet>
   );
 }

@@ -18,10 +18,9 @@ export function UserNav() {
 
   async function handleSignOut() {
     try {
-      await fetch('/api/auth/logout', { method: 'POST' });
+      const { authService } = await import('@/services/auth.service');
+      authService.logout();
       toast.success('已退出登录');
-      router.push('/login');
-      router.refresh();
     } catch (error) {
       toast.error('退出登录失败');
     }

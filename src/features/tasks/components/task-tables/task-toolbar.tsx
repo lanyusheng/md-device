@@ -16,8 +16,10 @@ import {
   IconCircleDashed,
   IconCircleMinus,
   IconCircleX,
-  IconFileText
+  IconFileText,
+  IconPlus
 } from '@tabler/icons-react';
+import { TaskDrawer } from '../task-drawer';
 import * as React from 'react';
 
 interface TaskToolbarProps<TData> {
@@ -26,10 +28,13 @@ interface TaskToolbarProps<TData> {
 
 export function TaskToolbar<TData>({ table }: TaskToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0 || table.getState().globalFilter;
+  const [createOpen, setCreateOpen] = React.useState(false);
 
   return (
-    <div className='flex w-full items-start justify-between gap-2 p-1'>
-      <div className='flex flex-1 flex-wrap items-center gap-2'>
+    <>
+      <TaskDrawer open={createOpen} onOpenChange={setCreateOpen} initialData={null} />
+      <div className='flex w-full items-start justify-between gap-2 p-1'>
+        <div className='flex flex-1 flex-wrap items-center gap-2'>
         {/* 全局搜索框 */}
         <Input
           placeholder='Search all fields...'
@@ -100,8 +105,18 @@ export function TaskToolbar<TData>({ table }: TaskToolbarProps<TData>) {
       </div>
 
       <div className='flex items-center gap-2'>
+        <Button
+          variant='default'
+          size='sm'
+          className='h-8'
+          onClick={() => setCreateOpen(true)}
+        >
+          <IconPlus className='mr-2 h-4 w-4' />
+          新建任务
+        </Button>
         <DataTableViewOptions table={table} />
       </div>
     </div>
+    </>
   );
 }
