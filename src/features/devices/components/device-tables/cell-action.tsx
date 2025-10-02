@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Device } from '@/types/api';
 import { useDeviceStore } from '../../store/device.store';
@@ -17,9 +17,7 @@ import {
   IconDotsVertical,
   IconEdit,
   IconTrash,
-  IconEye,
-  IconPlayerPlay,
-  IconPlayerStop,
+  IconEye
 } from '@tabler/icons-react';
 import { useState } from 'react';
 import { toast } from 'sonner';

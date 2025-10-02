@@ -11,7 +11,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  useReactTable,
+  useReactTable
 } from '@tanstack/react-table';
 import { DeviceToolbar } from './device-toolbar';
 import * as React from 'react';
@@ -26,17 +26,16 @@ interface DeviceTableProps {
 // 全局搜索过滤函数
 const globalFilterFn: FilterFn<Device> = (row, columnId, filterValue) => {
   const searchValue = String(filterValue).toLowerCase();
-  const searchableText = `${row.original.DeviceID} ${row.original.DeviceName} ${row.original.PublicIP} ${row.original.DefaultIP}`.toLowerCase();
+  const searchableText =
+    `${row.original.DeviceID} ${row.original.DeviceName} ${row.original.PublicIP} ${row.original.DefaultIP}`.toLowerCase();
   return searchableText.includes(searchValue);
 };
 
 export function DeviceTable({
   data,
-  totalItems,
   columns,
-  isLoading = false,
+  isLoading = false
 }: DeviceTableProps) {
-  const [pageSize] = useQueryState('perPage', parseAsInteger.withDefault(10));
   const [globalFilter, setGlobalFilter] = React.useState('');
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [sorting, setSorting] = React.useState([]);
@@ -51,7 +50,7 @@ export function DeviceTable({
       columnFilters,
       sorting,
       rowSelection,
-      columnVisibility,
+      columnVisibility
     },
     enableRowSelection: true,
     onGlobalFilterChange: setGlobalFilter,
@@ -65,7 +64,7 @@ export function DeviceTable({
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
+    getFacetedUniqueValues: getFacetedUniqueValues()
   });
 
   return (

@@ -41,9 +41,9 @@ const statusLabels: Record<TaskStatus, string> = {
 
 // 优先级图标映射
 const priorityIcons: Record<TaskPriority, React.ReactNode> = {
-  low: <IconArrowDown className='h-4 w-4 text-muted-foreground' />,
+  low: <IconArrowDown className='text-muted-foreground h-4 w-4' />,
   medium: <IconArrowUpRight className='h-4 w-4' />,
-  high: <IconArrowUp className='h-4 w-4 text-destructive' />
+  high: <IconArrowUp className='text-destructive h-4 w-4' />
 };
 
 // 优先级标签映射
@@ -54,29 +54,29 @@ const priorityLabels: Record<TaskPriority, string> = {
 };
 
 // Label 标签映射
-const labelBadgeVariants: Record<TaskLabel, 'default' | 'secondary' | 'destructive' | 'outline'> = {
+const labelBadgeVariants: Record<
+  TaskLabel,
+  'default' | 'secondary' | 'destructive' | 'outline'
+> = {
   bug: 'destructive',
   feature: 'default',
   documentation: 'secondary'
 };
 
-// 全局搜索过滤函数
-function globalFilterFn(row: any, columnId: string, filterValue: string) {
-  const searchValue = filterValue.toLowerCase();
-
-  // 搜索所有文本字段
-  const searchableFields = [
-    row.original.id,
-    row.original.title,
-    row.original.status,
-    row.original.label,
-    row.original.priority
-  ];
-
-  return searchableFields.some(field =>
-    field?.toString().toLowerCase().includes(searchValue)
-  );
-}
+// 全局搜索过滤函数 - 在 index.tsx 中使用
+// function globalFilterFn(row: any, columnId: string, filterValue: string) {
+//   const searchValue = filterValue.toLowerCase();
+//   const searchableFields = [
+//     row.original.id,
+//     row.original.title,
+//     row.original.status,
+//     row.original.label,
+//     row.original.priority
+//   ];
+//   return searchableFields.some(field =>
+//     field?.toString().toLowerCase().includes(searchValue)
+//   );
+// }
 
 export const columns: ColumnDef<Task>[] = [
   {
@@ -105,7 +105,7 @@ export const columns: ColumnDef<Task>[] = [
     header: ({ column }) => {
       return (
         <button
-          className='flex items-center gap-1 hover:text-foreground'
+          className='hover:text-foreground flex items-center gap-1'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           <span>Task</span>
@@ -119,9 +119,7 @@ export const columns: ColumnDef<Task>[] = [
         </button>
       );
     },
-    cell: ({ row }) => (
-      <div className='font-medium'>{row.getValue('id')}</div>
-    ),
+    cell: ({ row }) => <div className='font-medium'>{row.getValue('id')}</div>,
     enableSorting: true
   },
   {
@@ -129,7 +127,7 @@ export const columns: ColumnDef<Task>[] = [
     header: ({ column }) => {
       return (
         <button
-          className='flex items-center gap-1 hover:text-foreground'
+          className='hover:text-foreground flex items-center gap-1'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           <span>Title</span>
@@ -157,7 +155,7 @@ export const columns: ColumnDef<Task>[] = [
     header: ({ column }) => {
       return (
         <button
-          className='flex items-center gap-1 hover:text-foreground'
+          className='hover:text-foreground flex items-center gap-1'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           <span>Label</span>
@@ -176,7 +174,9 @@ export const columns: ColumnDef<Task>[] = [
       return (
         <Badge variant={labelBadgeVariants[label]} className='capitalize'>
           {label === 'bug' && <IconAlertCircle className='mr-1 h-3 w-3' />}
-          {label === 'documentation' && <IconFileText className='mr-1 h-3 w-3' />}
+          {label === 'documentation' && (
+            <IconFileText className='mr-1 h-3 w-3' />
+          )}
           {label}
         </Badge>
       );
@@ -201,7 +201,7 @@ export const columns: ColumnDef<Task>[] = [
     header: ({ column }) => {
       return (
         <button
-          className='flex items-center gap-1 hover:text-foreground'
+          className='hover:text-foreground flex items-center gap-1'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           <span>Status</span>
@@ -246,7 +246,7 @@ export const columns: ColumnDef<Task>[] = [
     header: ({ column }) => {
       return (
         <button
-          className='flex items-center gap-1 hover:text-foreground'
+          className='hover:text-foreground flex items-center gap-1'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           <span>Priority</span>
@@ -272,7 +272,10 @@ export const columns: ColumnDef<Task>[] = [
     enableSorting: true,
     sortingFn: (rowA, rowB) => {
       const priorityOrder = { low: 0, medium: 1, high: 2 };
-      return priorityOrder[rowA.original.priority] - priorityOrder[rowB.original.priority];
+      return (
+        priorityOrder[rowA.original.priority] -
+        priorityOrder[rowB.original.priority]
+      );
     },
     enableColumnFilter: true,
     filterFn: (row, id, value) => {

@@ -1,8 +1,6 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Progress } from '@/components/ui/progress';
 import { Device } from '@/types/api';
 import { ColumnDef } from '@tanstack/react-table';
 import {
@@ -15,7 +13,6 @@ import {
   IconWifi
 } from '@tabler/icons-react';
 import { CellAction } from './cell-action';
-import { formatBytes } from '@/lib/utils';
 
 /**
  * 格式化百分比
@@ -34,14 +31,17 @@ const formatDateTime = (dateString: string): string => {
     month: '2-digit',
     day: '2-digit',
     hour: '2-digit',
-    minute: '2-digit',
+    minute: '2-digit'
   });
 };
 
 /**
  * 获取进度条颜色类
  */
-const getProgressColor = (percent: number, type: 'cpu' | 'memory' | 'battery'): string => {
+const getProgressColor = (
+  percent: number,
+  type: 'cpu' | 'memory' | 'battery'
+): string => {
   if (type === 'battery') {
     // 电量：高=绿色，中=黄色，低=红色
     if (percent >= 50) return 'bg-green-500';
@@ -75,14 +75,14 @@ export const columns: ColumnDef<Device>[] = [
       />
     ),
     enableSorting: false,
-    enableHiding: false,
+    enableHiding: false
   },
   {
     accessorKey: 'DeviceID',
     header: ({ column }) => {
       return (
         <button
-          className='flex items-center gap-1 hover:text-foreground'
+          className='hover:text-foreground flex items-center gap-1'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           <span>设备ID</span>
@@ -99,14 +99,14 @@ export const columns: ColumnDef<Device>[] = [
     cell: ({ row }) => (
       <div className='font-mono text-sm'>{row.getValue('DeviceID')}</div>
     ),
-    enableSorting: true,
+    enableSorting: true
   },
   {
     accessorKey: 'DeviceName',
     header: ({ column }) => {
       return (
         <button
-          className='flex items-center gap-1 hover:text-foreground'
+          className='hover:text-foreground flex items-center gap-1'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           <IconDeviceDesktop className='h-4 w-4' />
@@ -128,14 +128,14 @@ export const columns: ColumnDef<Device>[] = [
         </div>
       );
     },
-    enableSorting: true,
+    enableSorting: true
   },
   {
     accessorKey: 'CpuPercent',
     header: ({ column }) => {
       return (
         <button
-          className='flex items-center gap-1 hover:text-foreground'
+          className='hover:text-foreground flex items-center gap-1'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           <IconCpu className='h-4 w-4' />
@@ -157,9 +157,9 @@ export const columns: ColumnDef<Device>[] = [
         <div className='w-[120px] space-y-1'>
           <div className='flex items-center justify-between text-xs'>
             <span className='font-medium'>{formatPercent(percent)}</span>
-            <IconCpu className='h-3 w-3 text-muted-foreground' />
+            <IconCpu className='text-muted-foreground h-3 w-3' />
           </div>
-          <div className='w-full bg-secondary rounded-full h-2 overflow-hidden'>
+          <div className='bg-secondary h-2 w-full overflow-hidden rounded-full'>
             <div
               className={`h-full ${colorClass} transition-all duration-300`}
               style={{ width: `${Math.min(percent, 100)}%` }}
@@ -168,14 +168,14 @@ export const columns: ColumnDef<Device>[] = [
         </div>
       );
     },
-    enableSorting: true,
+    enableSorting: true
   },
   {
     accessorKey: 'MemPercent',
     header: ({ column }) => {
       return (
         <button
-          className='flex items-center gap-1 hover:text-foreground'
+          className='hover:text-foreground flex items-center gap-1'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           <span>内存使用率</span>
@@ -199,7 +199,7 @@ export const columns: ColumnDef<Device>[] = [
             <span className='font-medium'>{formatPercent(percent)}</span>
             <span className='text-muted-foreground'>{total}GB</span>
           </div>
-          <div className='w-full bg-secondary rounded-full h-2 overflow-hidden'>
+          <div className='bg-secondary h-2 w-full overflow-hidden rounded-full'>
             <div
               className={`h-full ${colorClass} transition-all duration-300`}
               style={{ width: `${Math.min(percent, 100)}%` }}
@@ -208,14 +208,14 @@ export const columns: ColumnDef<Device>[] = [
         </div>
       );
     },
-    enableSorting: true,
+    enableSorting: true
   },
   {
     accessorKey: 'BatteryPercent',
     header: ({ column }) => {
       return (
         <button
-          className='flex items-center gap-1 hover:text-foreground'
+          className='hover:text-foreground flex items-center gap-1'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           <IconBattery className='h-4 w-4' />
@@ -237,9 +237,9 @@ export const columns: ColumnDef<Device>[] = [
         <div className='w-[100px] space-y-1'>
           <div className='flex items-center justify-between text-xs'>
             <span className='font-medium'>{formatPercent(percent)}</span>
-            <IconBattery className='h-3 w-3 text-muted-foreground' />
+            <IconBattery className='text-muted-foreground h-3 w-3' />
           </div>
-          <div className='w-full bg-secondary rounded-full h-2 overflow-hidden'>
+          <div className='bg-secondary h-2 w-full overflow-hidden rounded-full'>
             <div
               className={`h-full ${colorClass} transition-all duration-300`}
               style={{ width: `${Math.min(percent, 100)}%` }}
@@ -248,14 +248,14 @@ export const columns: ColumnDef<Device>[] = [
         </div>
       );
     },
-    enableSorting: true,
+    enableSorting: true
   },
   {
     accessorKey: 'PublicIP',
     header: ({ column }) => {
       return (
         <button
-          className='flex items-center gap-1 hover:text-foreground'
+          className='hover:text-foreground flex items-center gap-1'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           <IconWifi className='h-4 w-4' />
@@ -276,25 +276,25 @@ export const columns: ColumnDef<Device>[] = [
       return (
         <div className='font-mono text-sm'>
           <div className='flex items-center gap-1'>
-            <IconWifi className='h-3 w-3 text-muted-foreground' />
+            <IconWifi className='text-muted-foreground h-3 w-3' />
             <span>{publicIP || '-'}</span>
           </div>
           {defaultIP && (
-            <div className='text-xs text-muted-foreground mt-0.5'>
+            <div className='text-muted-foreground mt-0.5 text-xs'>
               {defaultIP}
             </div>
           )}
         </div>
       );
     },
-    enableSorting: true,
+    enableSorting: true
   },
   {
     accessorKey: 'UpdateTime',
     header: ({ column }) => {
       return (
         <button
-          className='flex items-center gap-1 hover:text-foreground'
+          className='hover:text-foreground flex items-center gap-1'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           <span>更新时间</span>
@@ -311,15 +311,15 @@ export const columns: ColumnDef<Device>[] = [
     cell: ({ row }) => {
       const updateTime = row.getValue('UpdateTime') as string;
       return (
-        <span className='text-sm text-muted-foreground'>
+        <span className='text-muted-foreground text-sm'>
           {formatDateTime(updateTime)}
         </span>
       );
     },
-    enableSorting: true,
+    enableSorting: true
   },
   {
     id: 'actions',
-    cell: ({ row }) => <CellAction data={row.original} />,
-  },
+    cell: ({ row }) => <CellAction data={row.original} />
+  }
 ];

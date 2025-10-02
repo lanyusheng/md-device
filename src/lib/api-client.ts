@@ -16,8 +16,8 @@ const DEFAULT_CONFIG: ApiConfig = {
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || '/api',
   timeout: 30000,
   headers: {
-    'Content-Type': 'application/json',
-  },
+    'Content-Type': 'application/json'
+  }
 };
 
 /**
@@ -65,14 +65,14 @@ class ApiClient {
       BusinessID: '1',
       TenantID: 1,
       CompanyID: 1,
-      LocationID: 1,
+      LocationID: 1
     };
 
     // 深度合并 UserLocation
     if (data.UserLocation) {
       data.UserLocation = {
         ...data.UserLocation,
-        ...defaultUserLocation,
+        ...defaultUserLocation
       };
     } else {
       data.UserLocation = defaultUserLocation;
@@ -90,8 +90,11 @@ class ApiClient {
     if (!params) return fullUrl;
 
     const queryString = Object.entries(params)
-      .filter(([_, value]) => value !== undefined && value !== null)
-      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`)
+      .filter(([, value]) => value !== undefined && value !== null)
+      .map(
+        ([key, value]) =>
+          `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`
+      )
       .join('&');
 
     return queryString ? `${fullUrl}?${queryString}` : fullUrl;
@@ -108,7 +111,7 @@ class ApiClient {
     const token = TokenManager.getToken();
     const headers: HeadersInit = {
       ...this.config.headers,
-      ...options.headers,
+      ...options.headers
     };
 
     if (token) {
@@ -123,18 +126,21 @@ class ApiClient {
         method: options.method || 'GET',
         url: fullUrl,
         params,
-        body: options.body,
+        body: options.body
       });
     }
 
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), this.config.timeout);
+      const timeoutId = setTimeout(
+        () => controller.abort(),
+        this.config.timeout
+      );
 
       const response = await fetch(fullUrl, {
         ...options,
         headers,
-        signal: controller.signal,
+        signal: controller.signal
       });
 
       clearTimeout(timeoutId);
@@ -143,7 +149,7 @@ class ApiClient {
       if (process.env.NODE_ENV === 'development') {
         console.log('✅ API Response:', {
           url: fullUrl,
-          status: response.status,
+          status: response.status
         });
       }
 
@@ -237,7 +243,10 @@ class ApiClient {
   /**
    * GET 请求
    */
-  async get<T = any>(url: string, params?: Record<string, any>): Promise<ApiResponse<T>> {
+  async get<T = any>(
+    url: string,
+    params?: Record<string, any>
+  ): Promise<ApiResponse<T>> {
     return this.request<T>(url, { method: 'GET' }, params);
   }
 
@@ -250,7 +259,7 @@ class ApiClient {
 
     return this.request<T>(url, {
       method: 'POST',
-      body: JSON.stringify(injectedData),
+      body: JSON.stringify(injectedData)
     });
   }
 
@@ -263,14 +272,17 @@ class ApiClient {
 
     return this.request<T>(url, {
       method: 'PUT',
-      body: JSON.stringify(injectedData),
+      body: JSON.stringify(injectedData)
     });
   }
 
   /**
    * DELETE 请求
    */
-  async delete<T = any>(url: string, params?: Record<string, any>): Promise<ApiResponse<T>> {
+  async delete<T = any>(
+    url: string,
+    params?: Record<string, any>
+  ): Promise<ApiResponse<T>> {
     return this.request<T>(url, { method: 'DELETE' }, params);
   }
 }

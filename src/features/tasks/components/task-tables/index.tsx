@@ -25,12 +25,12 @@ interface TaskTableProps {
 // 全局搜索过滤函数
 const globalFilterFn: FilterFn<Task> = (row, columnId, filterValue) => {
   const searchValue = String(filterValue).toLowerCase();
-  const searchableText = `${row.original.id} ${row.original.title} ${row.original.status} ${row.original.label} ${row.original.priority}`.toLowerCase();
+  const searchableText =
+    `${row.original.id} ${row.original.title} ${row.original.status} ${row.original.label} ${row.original.priority}`.toLowerCase();
   return searchableText.includes(searchValue);
 };
 
-export function TaskTable({ data, totalItems, columns }: TaskTableProps) {
-  const [pageSize] = useQueryState('perPage', parseAsInteger.withDefault(10));
+export function TaskTable({ data, columns }: TaskTableProps) {
   const [globalFilter, setGlobalFilter] = React.useState('');
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [sorting, setSorting] = React.useState([]);

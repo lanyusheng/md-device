@@ -5,14 +5,10 @@ import {
   DeviceState,
   DeviceSearchRequest,
   DevicePageResponse,
-  DeleteDeviceParams,
   RemoveDeviceDto,
   DeviceProfileState,
   InstallApkRequest,
-  UninstallApkRequest,
-  GetPackageListParams,
-  StartScreenMirroringParams,
-  StopScreenMirroringParams,
+  UninstallApkRequest
 } from '@/types/api';
 
 /**
@@ -32,7 +28,9 @@ class DeviceService {
    * 删除设备
    */
   async deleteDevice(deviceId: string): Promise<ApiResponse<any>> {
-    return apiClient.get(`${this.baseUrl}/DeleteDevice`, { DeviceID: deviceId });
+    return apiClient.get(`${this.baseUrl}/DeleteDevice`, {
+      DeviceID: deviceId
+    });
   }
 
   /**
@@ -45,8 +43,14 @@ class DeviceService {
   /**
    * 修改设备资料
    */
-  async updateDevice(deviceId: string, data: DeviceProfileState): Promise<ApiResponse<any>> {
-    return apiClient.post(`${this.baseUrl}/UpdateDevice?DeviceID=${deviceId}`, data);
+  async updateDevice(
+    deviceId: string,
+    data: DeviceProfileState
+  ): Promise<ApiResponse<any>> {
+    return apiClient.post(
+      `${this.baseUrl}/UpdateDevice?DeviceID=${deviceId}`,
+      data
+    );
   }
 
   /**
@@ -59,7 +63,9 @@ class DeviceService {
   /**
    * 分页搜索设备列表
    */
-  async getDevicePage(request: DeviceSearchRequest): Promise<ApiResponse<DevicePageResponse>> {
+  async getDevicePage(
+    request: DeviceSearchRequest
+  ): Promise<ApiResponse<DevicePageResponse>> {
     return apiClient.post(`${this.baseUrl}/GetDevicePage`, request);
   }
 
@@ -81,21 +87,27 @@ class DeviceService {
    * 获取应用列表
    */
   async getPackageList(deviceId: string): Promise<ApiResponse<string[]>> {
-    return apiClient.get(`${this.baseUrl}/GetPackageList`, { DeviceID: deviceId });
+    return apiClient.get(`${this.baseUrl}/GetPackageList`, {
+      DeviceID: deviceId
+    });
   }
 
   /**
    * 开始投屏
    */
   async startScreenMirroring(deviceId: string): Promise<ApiResponse<any>> {
-    return apiClient.get(`${this.baseUrl}/StartScreenMirroring`, { DeviceID: deviceId });
+    return apiClient.get(`${this.baseUrl}/StartScreenMirroring`, {
+      DeviceID: deviceId
+    });
   }
 
   /**
    * 停止投屏
    */
   async stopScreenMirroring(deviceId: string): Promise<ApiResponse<any>> {
-    return apiClient.get(`${this.baseUrl}/StopScreenMirroring`, { DeviceID: deviceId });
+    return apiClient.get(`${this.baseUrl}/StopScreenMirroring`, {
+      DeviceID: deviceId
+    });
   }
 
   /**
