@@ -71,9 +71,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       setLoading(true);
       const response = await deviceService.startScreenMirroring(data.DeviceID);
 
-      if (response.Success && response.Data) {
+      if (response.Code === 200 && response.Result) {
         // 打开小窗口显示投屏 URL
-        const url = response.Data.url || response.Data.Url || response.Data;
+        const url = response.Result.url || response.Result.Url || response.Result;
         const screenWidth = window.screen.width;
         const screenHeight = window.screen.height;
         const windowWidth = 800;

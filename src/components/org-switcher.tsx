@@ -6,7 +6,6 @@ import * as React from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -21,20 +20,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { IconLogout } from '@tabler/icons-react';
 import { toast } from 'sonner';
 
-interface Tenant {
-  id: string;
-  name: string;
-}
-
-export function OrgSwitcher({
-  tenants,
-  defaultTenant,
-  onTenantSwitch
-}: {
-  tenants: Tenant[];
-  defaultTenant: Tenant;
-  onTenantSwitch?: (tenantId: string) => void;
-}) {
+export function OrgSwitcher() {
   async function handleSignOut() {
     try {
       const { authService } = await import('@/services/auth.service');

@@ -201,7 +201,7 @@ export function InstallApkDrawer({
               <div className='rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20'>
                 <p className='text-xs text-blue-700 dark:text-blue-400'>
                   <strong>提示：</strong>
-                  点击"开始安装"后，将为选中的 {devices.length} 台设备安装{' '}
+                  点击&quot;开始安装&quot;后，将为选中的 {devices.length} 台设备安装{' '}
                   <strong>{apkFileName}</strong>
                 </p>
               </div>

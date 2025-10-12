@@ -2,7 +2,13 @@
 
 import { DataTable } from '@/components/ui/table/data-table';
 import { Device } from '@/types/api';
-import { ColumnDef, FilterFn } from '@tanstack/react-table';
+import {
+  ColumnDef,
+  FilterFn,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState
+} from '@tanstack/react-table';
 import {
   getCoreRowModel,
   getFacetedRowModel,
@@ -36,10 +42,10 @@ export function DeviceTable({
   isLoading = false
 }: DeviceTableProps) {
   const [globalFilter, setGlobalFilter] = React.useState('');
-  const [columnFilters, setColumnFilters] = React.useState([]);
-  const [sorting, setSorting] = React.useState([]);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [rowSelection, setRowSelection] = React.useState({});
-  const [columnVisibility, setColumnVisibility] = React.useState({});
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
 
   const table = useReactTable({
     data,
@@ -67,7 +73,7 @@ export function DeviceTable({
   });
 
   return (
-    <DataTable table={table} isLoading={isLoading}>
+    <DataTable table={table}>
       <DeviceToolbar table={table} />
     </DataTable>
   );

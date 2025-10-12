@@ -40,16 +40,17 @@ function generateFileName(originalName: string): string {
 
 /**
  * 计算文件的MD5哈希（用于Content-MD5）
+ * 注意：此函数暂未使用，但保留以备将来需要
  */
-async function calculateMD5(file: File): Promise<string> {
-  const arrayBuffer = await file.arrayBuffer();
-  const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('');
-  return btoa(hashHex);
-}
+// async function calculateMD5(file: File): Promise<string> {
+//   const arrayBuffer = await file.arrayBuffer();
+//   const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
+//   const hashArray = Array.from(new Uint8Array(hashBuffer));
+//   const hashHex = hashArray
+//     .map((b) => b.toString(16).padStart(2, '0'))
+//     .join('');
+//   return btoa(hashHex);
+// }
 
 /**
  * 使用XMLHttpRequest上传文件到OSS（支持进度回调）
@@ -181,12 +182,7 @@ export function validateAPKFile(file: File): {
   valid: boolean;
   message?: string;
 } {
-  // 检查文件类型
-  const validTypes = [
-    'application/vnd.android.package-archive',
-    'application/octet-stream'
-  ];
-
+  // 检查文件扩展名
   const validExtension = file.name.toLowerCase().endsWith('.apk');
 
   if (!validExtension) {

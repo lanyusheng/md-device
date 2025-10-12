@@ -16,8 +16,8 @@ const META_THEME_COLORS = {
 };
 
 export const metadata: Metadata = {
-  title: 'Next Shadcn',
-  description: 'Basic dashboard with Next.js and Shadcn'
+  title: '云机平台',
+  description: '云机设备管理平台'
 };
 
 export const viewport: Viewport = {

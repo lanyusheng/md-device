@@ -157,7 +157,7 @@ export default function LoginPage() {
               S
             </div>
             <span className='text-foreground text-2xl font-bold'>
-              Shadcn Dashboard
+              云机平台
             </span>
           </div>
 
@@ -238,12 +238,12 @@ export default function LoginPage() {
                   记住我
                 </label>
               </div>
-              <a
+              {/* <a
                 href='#'
                 className='text-primary text-sm font-medium hover:underline'
               >
                 忘记密码?
-              </a>
+              </a> */}
             </div>
 
             <Button type='submit' className='w-full' disabled={loading}>
@@ -252,7 +252,7 @@ export default function LoginPage() {
           </form>
 
           {/* Create Account Link */}
-          <div className='text-center'>
+          {/* <div className='text-center'>
             <span className='text-muted-foreground text-sm'>还没有账户? </span>
             <a
               href='#'
@@ -260,7 +260,7 @@ export default function LoginPage() {
             >
               立即注册
             </a>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

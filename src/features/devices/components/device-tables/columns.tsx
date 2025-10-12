@@ -1,23 +1,17 @@
 'use client';
 
 import { Checkbox } from '@/components/ui/checkbox';
-import { Badge } from '@/components/ui/badge';
 import { Device } from '@/types/api';
 import { ColumnDef } from '@tanstack/react-table';
 import {
   IconArrowsSort,
   IconSortAscending,
   IconSortDescending,
-  IconCpu,
   IconDeviceDesktop,
   IconBattery,
-  IconWifi,
-  IconCircleFilled,
-  IconNetwork,
-  IconCopy
+  IconWifi
 } from '@tabler/icons-react';
 import { CellAction } from './cell-action';
-import { toast } from 'sonner';
 
 /**
  * 格式化百分比
@@ -346,34 +340,10 @@ export const columns: ColumnDef<Device>[] = [
       );
     },
     cell: ({ row }) => {
-      const publicIP = row.getValue('PublicIP') as string;
-      const port = row.original.ServicePort;
       const defaultIP = row.original.DefaultIP;
-      const ipWithPort = publicIP ? `${publicIP}:${port}` : '-';
-
-      const handleCopy = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        if (publicIP) {
-          navigator.clipboard.writeText(ipWithPort);
-          toast.success('已复制到剪贴板');
-        }
-      };
 
       return (
         <div className='font-mono text-sm'>
-          {/*<div className='flex items-center gap-2 group h-[18px]'>*/}
-          {/*  <IconWifi className='text-muted-foreground h-3 w-3 flex-shrink-0' />*/}
-          {/*  <span className='flex-1'>{ipWithPort}</span>*/}
-          {/*  {publicIP && (*/}
-          {/*    <button*/}
-          {/*      onClick={handleCopy}*/}
-          {/*      className='opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-secondary rounded'*/}
-          {/*      title='复制 IP:端口'*/}
-          {/*    >*/}
-          {/*      <IconCopy className='h-3.5 w-3.5 text-muted-foreground hover:text-foreground' />*/}
-          {/*    </button>*/}
-          {/*  )}*/}
-          {/*</div>*/}
           {defaultIP ? (
             <div className='text-muted-foreground mt-1 flex h-[18px] items-center text-xs'>
               {defaultIP}:{row.original.ServicePort}
