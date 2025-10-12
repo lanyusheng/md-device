@@ -73,6 +73,7 @@ class DeviceService {
    * 安装应用
    */
   async installApk(request: InstallApkRequest): Promise<ApiResponse<any>> {
+    //request.ApkUrl='http://file.xkdevice.com/apk/WifiFTP.1.9.4.apk';
     return apiClient.post(`${this.baseUrl}/InstallApk`, request);
   }
 

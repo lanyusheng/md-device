@@ -14,7 +14,7 @@ export interface ApiConfig {
  */
 const DEFAULT_CONFIG: ApiConfig = {
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || '/api',
-  timeout: 30000,
+  timeout: 30000 * 100,
   headers: {
     'Content-Type': 'application/json'
   }
@@ -56,27 +56,27 @@ class ApiClient {
    * 注入默认的 UserLocation 参数
    */
   private injectUserLocation(data: any): any {
-    if (!data || typeof data !== 'object') {
-      return data;
-    }
-
-    // 默认的 UserLocation 配置（写死为 1）
-    const defaultUserLocation = {
-      BusinessID: '1',
-      TenantID: 1,
-      CompanyID: 1,
-      LocationID: 1
-    };
-
-    // 深度合并 UserLocation
-    if (data.UserLocation) {
-      data.UserLocation = {
-        ...data.UserLocation,
-        ...defaultUserLocation
-      };
-    } else {
-      data.UserLocation = defaultUserLocation;
-    }
+    // if (!data || typeof data !== 'object') {
+    //   return data;
+    // }
+    //
+    // // 默认的 UserLocation 配置（写死为 1）
+    // const defaultUserLocation = {
+    //   BusinessID: '1',
+    //   TenantID: 1,
+    //   CompanyID: 1,
+    //   LocationID: 1
+    // };
+    //
+    // // 深度合并 UserLocation
+    // if (data.UserLocation) {
+    //   data.UserLocation = {
+    //     ...data.UserLocation,
+    //     ...defaultUserLocation
+    //   };
+    // } else {
+    //   data.UserLocation = defaultUserLocation;
+    // }
 
     return data;
   }
