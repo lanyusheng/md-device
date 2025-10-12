@@ -313,3 +313,41 @@ export interface StopScreenMirroringParams {
   /** 设备ID */
   DeviceID: string;
 }
+
+// ==================== 阿里云OSS ====================
+
+/** OSS配置 */
+export interface OSSConfig {
+  /** OSS地域 */
+  region: string;
+  /** AccessKey ID */
+  accessKeyId: string;
+  /** AccessKey Secret */
+  accessKeySecret: string;
+  /** Bucket名称 */
+  bucket: string;
+  /** 自定义域名（可选） */
+  endpoint?: string;
+}
+
+/** OSS上传参数 */
+export interface OSSUploadParams {
+  /** 文件对象 */
+  file: File;
+  /** 文件路径（OSS中的路径） */
+  fileName?: string;
+  /** 进度回调 */
+  onProgress?: (progress: number) => void;
+}
+
+/** OSS上传结果 */
+export interface OSSUploadResult {
+  /** 文件URL */
+  url: string;
+  /** 文件名 */
+  name: string;
+  /** 文件大小 */
+  size: number;
+  /** 上传耗时（毫秒） */
+  duration: number;
+}

@@ -5,10 +5,17 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table } from '@tanstack/react-table';
 import { Cross2Icon } from '@radix-ui/react-icons';
-import { IconPlus, IconRefresh, IconTrash } from '@tabler/icons-react';
+import {
+  IconPackage,
+  IconPlus,
+  IconRefresh,
+  IconTrash
+} from '@tabler/icons-react';
 import { useDeviceStore } from '../../store/device.store';
 import * as React from 'react';
 import { toast } from 'sonner';
+import { InstallApkDrawer } from '../install-apk-drawer';
+import { Device } from '@/types/api';
 
 interface DeviceToolbarProps<TData> {
   table: Table<TData>;
@@ -16,13 +23,15 @@ interface DeviceToolbarProps<TData> {
 
 export function DeviceToolbar<TData>({ table }: DeviceToolbarProps<TData>) {
   const isFiltered =
-    table.getState().columnFilters.length > 0 ||
-    table.getState().globalFilter;
+    table.getState().columnFilters.length > 0 || table.getState().globalFilter;
   const { openDrawer, refreshDevices, batchDeleteDevices, isLoading } =
     useDeviceStore();
 
   const selectedRows = table.getFilteredSelectedRowModel().rows;
   const hasSelected = selectedRows.length > 0;
+
+  // 批量安装APK抽屉状态
+  const [installApkDrawerOpen, setInstallApkDrawerOpen] = React.useState(false);
 
   const handleBatchDelete = async () => {
     if (!hasSelected) return;
@@ -56,18 +65,30 @@ export function DeviceToolbar<TData>({ table }: DeviceToolbarProps<TData>) {
           className='h-8 w-40 lg:w-64'
         />
 
-        {/* 批量删除按钮 */}
+        {/* 批量操作按钮 */}
         {hasSelected && (
-          <Button
-            variant='destructive'
-            size='sm'
-            className='h-8'
-            onClick={handleBatchDelete}
-            disabled={isLoading}
-          >
-            <IconTrash className='mr-2 h-4 w-4' />
-            删除选中 ({selectedRows.length})
-          </Button>
+          <>
+            <Button
+              variant='default'
+              size='sm'
+              className='h-8'
+              onClick={() => setInstallApkDrawerOpen(true)}
+              disabled={isLoading}
+            >
+              <IconPackage className='mr-2 h-4 w-4' />
+              批量安装APK ({selectedRows.length})
+            </Button>
+            <Button
+              variant='destructive'
+              size='sm'
+              className='h-8'
+              onClick={handleBatchDelete}
+              disabled={isLoading}
+            >
+              <IconTrash className='mr-2 h-4 w-4' />
+              删除选中 ({selectedRows.length})
+            </Button>
+          </>
         )}
 
         {isFiltered && (
@@ -113,6 +134,13 @@ export function DeviceToolbar<TData>({ table }: DeviceToolbarProps<TData>) {
 
         <DataTableViewOptions table={table} />
       </div>
+
+      {/* 批量安装APK抽屉 */}
+      <InstallApkDrawer
+        open={installApkDrawerOpen}
+        onOpenChange={setInstallApkDrawerOpen}
+        devices={selectedRows.map((row: any) => row.original as Device)}
+      />
     </div>
   );
 }

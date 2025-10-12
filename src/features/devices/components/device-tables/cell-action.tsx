@@ -17,10 +17,12 @@ import {
   IconDotsVertical,
   IconEdit,
   IconTrash,
-  IconEye
+  IconEye,
+  IconPackage
 } from '@tabler/icons-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { InstallApkDrawer } from '../install-apk-drawer';
 
 interface CellActionProps {
   data: Device;
@@ -29,6 +31,7 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [loading, setLoading] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [installApkOpen, setInstallApkOpen] = useState(false);
   const { deleteDevice, openDrawer } = useDeviceStore();
 
   const onConfirm = async () => {
@@ -82,11 +85,22 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             <IconEdit className='mr-2 h-4 w-4' /> 编辑
           </DropdownMenuItem>
           <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => setInstallApkOpen(true)}>
+            <IconPackage className='mr-2 h-4 w-4' /> 安装APK
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setDeleteOpen(true)}>
             <IconTrash className='mr-2 h-4 w-4' /> 删除
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      {/* 安装APK抽屉 */}
+      <InstallApkDrawer
+        open={installApkOpen}
+        onOpenChange={setInstallApkOpen}
+        devices={[data]}
+      />
     </>
   );
 };

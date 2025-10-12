@@ -115,7 +115,7 @@ class ApiClient {
     };
 
     if (token) {
-      (headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
+      (headers as Record<string, string>)['Authorization'] = `${token}`;
     }
 
     const fullUrl = this.buildUrl(url, params);
