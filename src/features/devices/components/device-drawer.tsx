@@ -10,7 +10,7 @@ import {
   SheetDescription,
   SheetFooter,
   SheetHeader,
-  SheetTitle,
+  SheetTitle
 } from '@/components/ui/sheet';
 import { Device } from '@/types/api';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -27,8 +27,11 @@ const formSchema = z.object({
   MemTotal: z.coerce.number().min(1, { message: '内存总量至少为1GB' }),
   PublicIP: z.string().optional(),
   DefaultIP: z.string().optional(),
-  ServicePort: z.coerce.number().min(1).max(65535, { message: '端口范围1-65535' }),
-  GroupID: z.coerce.number().default(0),
+  ServicePort: z.coerce
+    .number()
+    .min(1)
+    .max(65535, { message: '端口范围1-65535' }),
+  GroupID: z.coerce.number().default(0)
 });
 
 export function DeviceDrawer() {
@@ -39,7 +42,7 @@ export function DeviceDrawer() {
     closeDrawer,
     createDevice,
     updateDevice,
-    isLoading,
+    isLoading
   } = useDeviceStore();
 
   const isViewMode = drawerMode === 'view';
@@ -55,8 +58,8 @@ export function DeviceDrawer() {
       PublicIP: '',
       DefaultIP: '',
       ServicePort: 8080,
-      GroupID: 0,
-    },
+      GroupID: 0
+    }
   });
 
   // 当选中设备或模式改变时，更新表单
@@ -70,7 +73,7 @@ export function DeviceDrawer() {
         PublicIP: selectedDevice.PublicIP || '',
         DefaultIP: selectedDevice.DefaultIP || '',
         ServicePort: selectedDevice.ServicePort || 8080,
-        GroupID: selectedDevice.GroupID || 0,
+        GroupID: selectedDevice.GroupID || 0
       });
     } else {
       form.reset({
@@ -81,7 +84,7 @@ export function DeviceDrawer() {
         PublicIP: '',
         DefaultIP: '',
         ServicePort: 8080,
-        GroupID: 0,
+        GroupID: 0
       });
     }
   }, [selectedDevice, isDrawerOpen, form]);
@@ -101,7 +104,7 @@ export function DeviceDrawer() {
         DefaultIP: values.DefaultIP || null,
         ServicePort: values.ServicePort,
         GroupID: values.GroupID,
-        UpdateTime: new Date().toISOString(),
+        UpdateTime: new Date().toISOString()
       };
 
       if (isEditMode && selectedDevice?.DeviceID) {
@@ -133,7 +136,7 @@ export function DeviceDrawer() {
 
   return (
     <Sheet open={isDrawerOpen} onOpenChange={closeDrawer}>
-      <SheetContent side='right' className='sm:max-w-lg overflow-y-auto'>
+      <SheetContent side='right' className='overflow-y-auto px-6 sm:max-w-lg'>
         <SheetHeader>
           <SheetTitle>{getTitle()}</SheetTitle>
           <SheetDescription>{getDescription()}</SheetDescription>

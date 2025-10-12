@@ -1,12 +1,15 @@
 'use client';
 
-import { Check, ChevronsUpDown, GalleryVerticalEnd } from 'lucide-react';
+import { ChevronsUpDown } from 'lucide-react';
 import * as React from 'react';
 
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import {
@@ -14,6 +17,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem
 } from '@/components/ui/sidebar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { IconLogout } from '@tabler/icons-react';
+import { toast } from 'sonner';
 
 interface Tenant {
   id: string;
@@ -29,20 +35,16 @@ export function OrgSwitcher({
   defaultTenant: Tenant;
   onTenantSwitch?: (tenantId: string) => void;
 }) {
-  const [selectedTenant, setSelectedTenant] = React.useState<
-    Tenant | undefined
-  >(defaultTenant || (tenants.length > 0 ? tenants[0] : undefined));
-
-  const handleTenantSwitch = (tenant: Tenant) => {
-    setSelectedTenant(tenant);
-    if (onTenantSwitch) {
-      onTenantSwitch(tenant.id);
+  async function handleSignOut() {
+    try {
+      const { authService } = await import('@/services/auth.service');
+      authService.logout();
+      toast.success('已退出登录');
+    } catch (error) {
+      toast.error('退出登录失败');
     }
-  };
-
-  if (!selectedTenant) {
-    return null;
   }
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -52,31 +54,32 @@ export function OrgSwitcher({
               size='lg'
               className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
             >
-              <div className='bg-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg'>
-                <GalleryVerticalEnd className='size-4' />
-              </div>
+              <Avatar className='bg-primary text-primary-foreground h-8 w-8'>
+                <AvatarFallback>AD</AvatarFallback>
+              </Avatar>
               <div className='flex flex-col gap-0.5 leading-none'>
-                <span className='font-semibold'>Next Starter</span>
-                <span className=''>{selectedTenant.name}</span>
+                <span className='font-semibold'>Admin</span>
+                <span className='text-muted-foreground text-xs'>
+                  admin@example.com
+                </span>
               </div>
               <ChevronsUpDown className='ml-auto' />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className='w-[--radix-dropdown-menu-trigger-width]'
-            align='start'
-          >
-            {tenants.map((tenant) => (
-              <DropdownMenuItem
-                key={tenant.id}
-                onSelect={() => handleTenantSwitch(tenant)}
-              >
-                {tenant.name}{' '}
-                {tenant.id === selectedTenant.id && (
-                  <Check className='ml-auto' />
-                )}
-              </DropdownMenuItem>
-            ))}
+          <DropdownMenuContent className='w-56' align='start' sideOffset={10}>
+            <DropdownMenuLabel className='font-normal'>
+              <div className='flex flex-col space-y-1'>
+                <p className='text-sm leading-none font-medium'>Admin</p>
+                <p className='text-muted-foreground text-xs leading-none'>
+                  admin@example.com
+                </p>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleSignOut}>
+              <IconLogout className='mr-2 h-4 w-4' />
+              退出登录
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

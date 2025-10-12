@@ -3,7 +3,7 @@ import {
   ApiResponse,
   VerifyUserPackage,
   UserLocation,
-  AuthorizationLevel,
+  AuthorizationLevel
 } from '@/types/api';
 
 /**
@@ -38,18 +38,12 @@ class AuthService {
       // UserLocation 会被 API 客户端自动注入默认值（TenantID=1, CompanyID=1, LocationID=1, BusinessID="1"）
       UserLocation: {
         AuthorizationLevel: AuthorizationLevel.Level0,
-        TenantID: 0,
-        CompanyID: 0,
-        BusinessID: params.businessId || null,
-        LocationID: 0,
-        MobilePhone: null,
-        UID: null,
-        RequestTicket: null,
-        Token: null,
-        CompanyAccessToken: null,
-        LocationAccessToken: null,
+        TenantID: 1,
+        CompanyID: 1,
+        BusinessID: '1',
+        LocationID: 1
       },
-      BusinessID: params.businessId || null,
+      BusinessID: '1',
       UserIdentifier: params.username,
       AccessPassword: params.password,
       SerialNumber: null,
@@ -58,12 +52,7 @@ class AuthService {
       UID: null,
       UserName: null,
       MobilePhone: null,
-      OuterUser: {
-        UserClass: null,
-        UserID: null,
-        UserData: null,
-      },
-      IdCardData: {},
+      IdCardData: {}
     };
 
     const response = await apiClient.post<LoginResponse>(

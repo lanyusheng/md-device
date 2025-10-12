@@ -1,6 +1,7 @@
 'use client';
 
 import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge';
 import { Device } from '@/types/api';
 import { ColumnDef } from '@tanstack/react-table';
 import {
@@ -10,9 +11,13 @@ import {
   IconCpu,
   IconDeviceDesktop,
   IconBattery,
-  IconWifi
+  IconWifi,
+  IconCircleFilled,
+  IconNetwork,
+  IconCopy
 } from '@tabler/icons-react';
 import { CellAction } from './cell-action';
+import { toast } from 'sonner';
 
 /**
  * 格式化百分比
@@ -55,6 +60,16 @@ const getProgressColor = (
   }
 };
 
+/**
+ * 判断设备是否在线（根据更新时间判断，5分钟内更新过的视为在线）
+ */
+const isDeviceOnline = (updateTime: string): boolean => {
+  const lastUpdate = new Date(updateTime).getTime();
+  const now = new Date().getTime();
+  const fiveMinutes = 5 * 60 * 1000;
+  return now - lastUpdate < fiveMinutes;
+};
+
 export const columns: ColumnDef<Device>[] = [
   {
     id: 'select',
@@ -76,6 +91,26 @@ export const columns: ColumnDef<Device>[] = [
     ),
     enableSorting: false,
     enableHiding: false
+  },
+  {
+    accessorKey: 'UpdateTime',
+    header: '状态',
+    cell: ({ row }) => {
+      const online = isDeviceOnline(row.getValue('UpdateTime'));
+      return (
+        <div className='flex items-center gap-1.5'>
+          <div
+            className={`h-2 w-2 rounded-full ${online ? 'bg-green-500' : 'bg-gray-400'}`}
+          />
+          <span
+            className={`text-xs ${online ? 'text-green-600' : 'text-gray-500'}`}
+          >
+            {online ? '在线' : '离线'}
+          </span>
+        </div>
+      );
+    },
+    enableSorting: false
   },
   {
     accessorKey: 'DeviceID',
@@ -130,6 +165,46 @@ export const columns: ColumnDef<Device>[] = [
     },
     enableSorting: true
   },
+  // {
+  //   accessorKey: 'CpuPercent',
+  //   header: ({ column }) => {
+  //     return (
+  //       <button
+  //         className='hover:text-foreground flex items-center gap-1'
+  //         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+  //       >
+  //         <IconCpu className='h-4 w-4' />
+  //         <span>CPU使用率</span>
+  //         {column.getIsSorted() === 'asc' ? (
+  //           <IconSortAscending className='h-4 w-4' />
+  //         ) : column.getIsSorted() === 'desc' ? (
+  //           <IconSortDescending className='h-4 w-4' />
+  //         ) : (
+  //           <IconArrowsSort className='h-4 w-4 opacity-50' />
+  //         )}
+  //       </button>
+  //     );
+  //   },
+  //   cell: ({ row }) => {
+  //     const percent = row.getValue('CpuPercent') as number;
+  //     const colorClass = getProgressColor(percent, 'cpu');
+  //     return (
+  //     <div className='w-[120px]'>
+  //       <div className='flex items-center justify-between text-xs h-[18px]'>
+  //         <span className='font-medium'>{formatPercent(row.original.percent)}</span>
+  //         <span className='text-muted-foreground'>{row.original.CpuCount}GB</span>
+  //       </div>
+  //       <div className='bg-secondary h-2 w-full overflow-hidden rounded-full mt-1'>
+  //         <div
+  //             className={`h-full ${colorClass} transition-all duration-300`}
+  //             style={{ width: `${Math.min(row.original.percent, 100)}%` }}
+  //         />
+  //       </div>
+  //     </div>
+  //     );
+  //   },
+  //   enableSorting: true
+  // },
   {
     accessorKey: 'CpuPercent',
     header: ({ column }) => {
@@ -138,7 +213,6 @@ export const columns: ColumnDef<Device>[] = [
           className='hover:text-foreground flex items-center gap-1'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          <IconCpu className='h-4 w-4' />
           <span>CPU使用率</span>
           {column.getIsSorted() === 'asc' ? (
             <IconSortAscending className='h-4 w-4' />
@@ -152,14 +226,15 @@ export const columns: ColumnDef<Device>[] = [
     },
     cell: ({ row }) => {
       const percent = row.getValue('CpuPercent') as number;
-      const colorClass = getProgressColor(percent, 'cpu');
+      const total = row.original.CpuCount;
+      const colorClass = getProgressColor(percent, 'memory');
       return (
-        <div className='w-[120px] space-y-1'>
-          <div className='flex items-center justify-between text-xs'>
+        <div className='w-[120px]'>
+          <div className='flex h-[18px] items-center justify-between text-xs'>
             <span className='font-medium'>{formatPercent(percent)}</span>
-            <IconCpu className='text-muted-foreground h-3 w-3' />
+            <span className='text-muted-foreground'>{total}GB</span>
           </div>
-          <div className='bg-secondary h-2 w-full overflow-hidden rounded-full'>
+          <div className='bg-secondary mt-1 h-2 w-full overflow-hidden rounded-full'>
             <div
               className={`h-full ${colorClass} transition-all duration-300`}
               style={{ width: `${Math.min(percent, 100)}%` }}
@@ -194,12 +269,12 @@ export const columns: ColumnDef<Device>[] = [
       const total = row.original.MemTotal;
       const colorClass = getProgressColor(percent, 'memory');
       return (
-        <div className='w-[120px] space-y-1'>
-          <div className='flex items-center justify-between text-xs'>
+        <div className='w-[120px]'>
+          <div className='flex h-[18px] items-center justify-between text-xs'>
             <span className='font-medium'>{formatPercent(percent)}</span>
             <span className='text-muted-foreground'>{total}GB</span>
           </div>
-          <div className='bg-secondary h-2 w-full overflow-hidden rounded-full'>
+          <div className='bg-secondary mt-1 h-2 w-full overflow-hidden rounded-full'>
             <div
               className={`h-full ${colorClass} transition-all duration-300`}
               style={{ width: `${Math.min(percent, 100)}%` }}
@@ -234,12 +309,12 @@ export const columns: ColumnDef<Device>[] = [
       const percent = row.getValue('BatteryPercent') as number;
       const colorClass = getProgressColor(percent, 'battery');
       return (
-        <div className='w-[100px] space-y-1'>
-          <div className='flex items-center justify-between text-xs'>
+        <div className='w-[100px]'>
+          <div className='flex h-[18px] items-center justify-between text-xs'>
             <span className='font-medium'>{formatPercent(percent)}</span>
             <IconBattery className='text-muted-foreground h-3 w-3' />
           </div>
-          <div className='bg-secondary h-2 w-full overflow-hidden rounded-full'>
+          <div className='bg-secondary mt-1 h-2 w-full overflow-hidden rounded-full'>
             <div
               className={`h-full ${colorClass} transition-all duration-300`}
               style={{ width: `${Math.min(percent, 100)}%` }}
@@ -259,7 +334,7 @@ export const columns: ColumnDef<Device>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           <IconWifi className='h-4 w-4' />
-          <span>公网IP</span>
+          <span>IP:端口</span>
           {column.getIsSorted() === 'asc' ? (
             <IconSortAscending className='h-4 w-4' />
           ) : column.getIsSorted() === 'desc' ? (
@@ -272,17 +347,39 @@ export const columns: ColumnDef<Device>[] = [
     },
     cell: ({ row }) => {
       const publicIP = row.getValue('PublicIP') as string;
+      const port = row.original.ServicePort;
       const defaultIP = row.original.DefaultIP;
+      const ipWithPort = publicIP ? `${publicIP}:${port}` : '-';
+
+      const handleCopy = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (publicIP) {
+          navigator.clipboard.writeText(ipWithPort);
+          toast.success('已复制到剪贴板');
+        }
+      };
+
       return (
         <div className='font-mono text-sm'>
-          <div className='flex items-center gap-1'>
-            <IconWifi className='text-muted-foreground h-3 w-3' />
-            <span>{publicIP || '-'}</span>
-          </div>
-          {defaultIP && (
-            <div className='text-muted-foreground mt-0.5 text-xs'>
-              {defaultIP}
+          {/*<div className='flex items-center gap-2 group h-[18px]'>*/}
+          {/*  <IconWifi className='text-muted-foreground h-3 w-3 flex-shrink-0' />*/}
+          {/*  <span className='flex-1'>{ipWithPort}</span>*/}
+          {/*  {publicIP && (*/}
+          {/*    <button*/}
+          {/*      onClick={handleCopy}*/}
+          {/*      className='opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-secondary rounded'*/}
+          {/*      title='复制 IP:端口'*/}
+          {/*    >*/}
+          {/*      <IconCopy className='h-3.5 w-3.5 text-muted-foreground hover:text-foreground' />*/}
+          {/*    </button>*/}
+          {/*  )}*/}
+          {/*</div>*/}
+          {defaultIP ? (
+            <div className='text-muted-foreground mt-1 flex h-[18px] items-center text-xs'>
+              {defaultIP}:{row.original.ServicePort}
             </div>
+          ) : (
+            <div className='invisible mt-1 h-[18px] text-xs'>placeholder</div>
           )}
         </div>
       );

@@ -18,11 +18,15 @@ import {
   IconEdit,
   IconTrash,
   IconEye,
-  IconPackage
+  IconPackage,
+  IconPackageOff,
+  IconDeviceTv
 } from '@tabler/icons-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { InstallApkDrawer } from '../install-apk-drawer';
+import { UninstallAppsDrawer } from '../uninstall-apps-drawer';
+import { deviceService } from '@/services/device.service';
 
 interface CellActionProps {
   data: Device;
@@ -32,6 +36,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [loading, setLoading] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [installApkOpen, setInstallApkOpen] = useState(false);
+  const [uninstallAppsOpen, setUninstallAppsOpen] = useState(false);
   const { deleteDevice, openDrawer } = useDeviceStore();
 
   const onConfirm = async () => {
@@ -53,6 +58,43 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     if (id) {
       navigator.clipboard.writeText(id);
       toast.success('设备 ID 已复制到剪贴板');
+    }
+  };
+
+  const onScreenMirroring = async () => {
+    if (!data.DeviceID) {
+      toast.error('设备 ID 不存在');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await deviceService.startScreenMirroring(data.DeviceID);
+
+      if (response.Success && response.Data) {
+        // 打开小窗口显示投屏 URL
+        const url = response.Data.url || response.Data.Url || response.Data;
+        const screenWidth = window.screen.width;
+        const screenHeight = window.screen.height;
+        const windowWidth = 800;
+        const windowHeight = 600;
+        const left = (screenWidth - windowWidth) / 2;
+        const top = (screenHeight - windowHeight) / 2;
+
+        window.open(
+          url,
+          '设备投屏',
+          `width=${windowWidth},height=${windowHeight},left=${left},top=${top},resizable=yes,scrollbars=yes`
+        );
+        toast.success('投屏已启动');
+      } else {
+        toast.error(response.Message || '投屏启动失败');
+      }
+    } catch (error) {
+      console.error('投屏失败:', error);
+      toast.error('投屏失败，请重试');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -85,8 +127,14 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             <IconEdit className='mr-2 h-4 w-4' /> 编辑
           </DropdownMenuItem>
           <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={onScreenMirroring} disabled={loading}>
+            <IconDeviceTv className='mr-2 h-4 w-4' /> 投屏
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setInstallApkOpen(true)}>
             <IconPackage className='mr-2 h-4 w-4' /> 安装APK
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setUninstallAppsOpen(true)}>
+            <IconPackageOff className='mr-2 h-4 w-4' /> 卸载应用
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setDeleteOpen(true)}>
@@ -100,6 +148,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         open={installApkOpen}
         onOpenChange={setInstallApkOpen}
         devices={[data]}
+      />
+
+      {/* 卸载应用抽屉 */}
+      <UninstallAppsDrawer
+        open={uninstallAppsOpen}
+        onOpenChange={setUninstallAppsOpen}
+        device={data}
       />
     </>
   );

@@ -29,10 +29,19 @@ export function UserNav() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant='ghost' className='relative h-8 w-8 rounded-full'>
+        <Button
+          variant='ghost'
+          className='relative flex h-10 items-center gap-2 rounded-lg px-3'
+        >
           <Avatar className='h-8 w-8'>
             <AvatarFallback>AD</AvatarFallback>
           </Avatar>
+          <div className='hidden flex-col items-start text-left md:flex'>
+            <span className='text-sm font-medium'>Admin</span>
+            <span className='text-muted-foreground text-xs'>
+              admin@example.com
+            </span>
+          </div>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
