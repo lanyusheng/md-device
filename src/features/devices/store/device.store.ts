@@ -16,6 +16,8 @@ interface DeviceState {
   isLoading: boolean;
   isDrawerOpen: boolean;
   drawerMode: 'create' | 'edit' | 'view';
+  isScreenMirroringLoading: boolean;
+  screenMirroringDeviceName: string;
 
   // 搜索状态
   searchKeyword: string;
@@ -33,6 +35,7 @@ interface DeviceActions {
   setSelectedDevice: (device: Device | null) => void;
   openDrawer: (mode: 'create' | 'edit' | 'view', device?: Device) => void;
   closeDrawer: () => void;
+  setScreenMirroringLoading: (loading: boolean, deviceName?: string) => void;
 
   // 搜索和分页
   setSearchKeyword: (keyword: string) => void;
@@ -62,6 +65,8 @@ export const useDeviceStore = create<DeviceStore>()(
       isLoading: false,
       isDrawerOpen: false,
       drawerMode: 'create',
+      isScreenMirroringLoading: false,
+      screenMirroringDeviceName: '',
       searchKeyword: '',
 
       // 获取设备列表
@@ -184,6 +189,14 @@ export const useDeviceStore = create<DeviceStore>()(
         set({
           isDrawerOpen: false,
           selectedDevice: null,
+        });
+      },
+
+      // 设置投屏 loading 状态
+      setScreenMirroringLoading: (loading, deviceName = '') => {
+        set({
+          isScreenMirroringLoading: loading,
+          screenMirroringDeviceName: deviceName,
         });
       },
 

@@ -19,6 +19,7 @@ import {
   useReactTable
 } from '@tanstack/react-table';
 import { DeviceToolbar } from './device-toolbar';
+import { Skeleton } from '@/components/ui/skeleton';
 import * as React from 'react';
 
 interface DeviceTableProps {
@@ -72,8 +73,28 @@ export function DeviceTable({
     getFacetedUniqueValues: getFacetedUniqueValues()
   });
 
+  // 如果正在加载，显示骨架屏
+  if (isLoading && data.length === 0) {
+    return (
+      <div className='flex flex-1 flex-col space-y-4'>
+        <div className='flex items-center justify-between'>
+          <Skeleton className='h-10 w-[250px]' />
+          <Skeleton className='h-10 w-[150px]' />
+        </div>
+        <div className='rounded-lg border'>
+          <div className='p-4 space-y-3'>
+            {[...Array(5)].map((_, i) => (
+              <Skeleton key={i} className='h-16 w-full' />
+            ))}
+          </div>
+        </div>
+        <Skeleton className='h-10 w-full' />
+      </div>
+    );
+  }
+
   return (
-    <DataTable table={table}>
+    <DataTable table={table} isLoading={isLoading}>
       <DeviceToolbar table={table} />
     </DataTable>
   );

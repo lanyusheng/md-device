@@ -20,6 +20,14 @@ const baseConfig: NextConfig = {
       }
     ]
   },
+  async rewrites() {
+    return [
+      {
+        source: "/Api/:path*",
+        destination: "http://api.release.xkdevice.com:25010/Api/:path*",
+      },
+    ];
+  },
   transpilePackages: ['geist']
 };
 

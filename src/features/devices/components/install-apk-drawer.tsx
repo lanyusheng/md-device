@@ -16,9 +16,24 @@ import { Separator } from '@/components/ui/separator';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { deviceService } from '@/services/device.service';
 import { Device } from '@/types/api';
-import { IconDeviceMobile, IconPackage } from '@tabler/icons-react';
+import {
+  IconDeviceMobile,
+  IconPackage,
+  IconCheck,
+  IconX,
+  IconLoader2
+} from '@tabler/icons-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+
+// 设备安装状态类型
+type InstallStatus = 'pending' | 'installing' | 'success' | 'failed';
+
+interface DeviceInstallStatus {
+  deviceId: string;
+  status: InstallStatus;
+  message?: string;
+}
 
 interface InstallApkDrawerProps {
   /** 抽屉打开状态 */
@@ -38,6 +53,7 @@ export function InstallApkDrawer({
   const [apkUrl, setApkUrl] = useState<string | null>(null);
   const [apkFileName, setApkFileName] = useState<string>('');
   const [isInstalling, setIsInstalling] = useState(false);
+  const [deviceStatuses, setDeviceStatuses] = useState<Map<string, DeviceInstallStatus>>(new Map());
 
   /**
    * 处理APK上传完成
@@ -72,6 +88,18 @@ export function InstallApkDrawer({
 
     setIsInstalling(true);
 
+    // 初始化所有设备状态为 installing
+    const initialStatuses = new Map<string, DeviceInstallStatus>();
+    devices.forEach((device) => {
+      if (device.DeviceID) {
+        initialStatuses.set(device.DeviceID, {
+          deviceId: device.DeviceID,
+          status: 'installing'
+        });
+      }
+    });
+    setDeviceStatuses(initialStatuses);
+
     try {
       const deviceIds = devices
         .map((d) => d.DeviceID)
@@ -82,19 +110,69 @@ export function InstallApkDrawer({
         ApkUrl: apkUrl
       });
 
-      if (response.Code === 200) {
+      // 处理最外层 Code
+      if (response.Code === 0 && response.Result) {
+        // 成功，解析每个设备的安装状态
+        const result = response.Result;
+        const updatedStatuses = new Map(initialStatuses);
+
+        // 遍历返回的结果
+        Object.keys(result).forEach((key) => {
+          const deviceResult = result[key];
+          const deviceId = deviceResult.deviceID;
+          const resultCode = deviceResult.result?.code;
+
+          if (deviceId) {
+            updatedStatuses.set(deviceId, {
+              deviceId,
+              status: resultCode === 0 ? 'success' : 'failed',
+              message: deviceResult.result?.message || deviceResult.result?.result
+            });
+          }
+        });
+
+        setDeviceStatuses(updatedStatuses);
+
+        // 统计成功和失败数量
+        const successCount = Array.from(updatedStatuses.values()).filter(
+          (s) => s.status === 'success'
+        ).length;
+        const failedCount = Array.from(updatedStatuses.values()).filter(
+          (s) => s.status === 'failed'
+        ).length;
+
         toast.success(
-          `安装任务已发送！正在为 ${devices.length} 台设备安装 ${apkFileName}`
+          `安装完成！成功: ${successCount} 台，失败: ${failedCount} 台`
         );
-        onOpenChange(false);
-        // 重置状态
-        setApkUrl(null);
-        setApkFileName('');
       } else {
+        // 整体失败
+        const updatedStatuses = new Map<string, DeviceInstallStatus>();
+        devices.forEach((device) => {
+          if (device.DeviceID) {
+            updatedStatuses.set(device.DeviceID, {
+              deviceId: device.DeviceID,
+              status: 'failed',
+              message: response.Message || '安装失败'
+            });
+          }
+        });
+        setDeviceStatuses(updatedStatuses);
         toast.error(response.Message || '安装失败');
       }
     } catch (error) {
       console.error('安装APK失败:', error);
+      // 所有设备标记为失败
+      const updatedStatuses = new Map<string, DeviceInstallStatus>();
+      devices.forEach((device) => {
+        if (device.DeviceID) {
+          updatedStatuses.set(device.DeviceID, {
+            deviceId: device.DeviceID,
+            status: 'failed',
+            message: error instanceof Error ? error.message : '网络错误'
+          });
+        }
+      });
+      setDeviceStatuses(updatedStatuses);
       toast.error(
         error instanceof Error ? error.message : '安装失败，请稍后重试'
       );
@@ -110,8 +188,53 @@ export function InstallApkDrawer({
     if (!newOpen) {
       setApkUrl(null);
       setApkFileName('');
+      setDeviceStatuses(new Map());
     }
     onOpenChange(newOpen);
+  };
+
+  /**
+   * 获取设备状态图标
+   */
+  const getStatusIcon = (deviceId: string | null) => {
+    if (!deviceId) return null;
+    const status = deviceStatuses.get(deviceId);
+    if (!status) return null;
+
+    switch (status.status) {
+      case 'installing':
+        return <IconLoader2 className='h-4 w-4 animate-spin text-blue-500' />;
+      case 'success':
+        return <IconCheck className='h-4 w-4 text-green-500' />;
+      case 'failed':
+        return <IconX className='h-4 w-4 text-red-500' />;
+      default:
+        return null;
+    }
+  };
+
+  /**
+   * 获取设备状态文本
+   */
+  const getStatusText = (deviceId: string | null) => {
+    if (!deviceId) return null;
+    const status = deviceStatuses.get(deviceId);
+    if (!status) return null;
+
+    switch (status.status) {
+      case 'installing':
+        return <span className='text-xs text-blue-600 dark:text-blue-400'>安装中...</span>;
+      case 'success':
+        return <span className='text-xs text-green-600 dark:text-green-400'>安装成功</span>;
+      case 'failed':
+        return (
+          <span className='text-xs text-red-600 dark:text-red-400' title={status.message}>
+            安装失败
+          </span>
+        );
+      default:
+        return null;
+    }
   };
 
   return (
@@ -174,9 +297,15 @@ export function InstallApkDrawer({
                       >
                         <IconDeviceMobile className='text-muted-foreground h-4 w-4' />
                         <div className='min-w-0 flex-1'>
-                          <p className='truncate text-sm font-medium'>
-                            {device.DeviceName || device.DeviceID}
-                          </p>
+                          <div className='flex items-center justify-between gap-2'>
+                            <p className='truncate text-sm font-medium'>
+                              {device.DeviceName || device.DeviceID}
+                            </p>
+                            <div className='flex items-center gap-1'>
+                              {getStatusIcon(device.DeviceID)}
+                              {getStatusText(device.DeviceID)}
+                            </div>
+                          </div>
                           <div className='text-muted-foreground flex items-center gap-2 text-xs'>
                             {device.DefaultIP && (
                               <span className='truncate'>

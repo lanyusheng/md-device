@@ -10,6 +10,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/dialog';
 import { Device } from '@/types/api';
 import { useDeviceStore } from '../../store/device.store';
 import {
@@ -20,7 +26,8 @@ import {
   IconEye,
   IconPackage,
   IconPackageOff,
-  IconDeviceTv
+  IconDeviceTv,
+  IconLoader2
 } from '@tabler/icons-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -37,7 +44,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [installApkOpen, setInstallApkOpen] = useState(false);
   const [uninstallAppsOpen, setUninstallAppsOpen] = useState(false);
-  const { deleteDevice, openDrawer } = useDeviceStore();
+  const [screenMirroringUrl, setScreenMirroringUrl] = useState<string | null>(null);
+  const {
+    deleteDevice,
+    openDrawer,
+    isScreenMirroringLoading,
+    setScreenMirroringLoading
+  } = useDeviceStore();
 
   const onConfirm = async () => {
     setLoading(true);
@@ -68,33 +81,32 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     }
 
     try {
-      setLoading(true);
+      // 设置全局 loading 状态
+      const deviceName = data.DeviceName || '未命名设备';
+      setScreenMirroringLoading(true, deviceName);
+
       const response = await deviceService.startScreenMirroring(data.DeviceID);
 
-      if (response.Code === 200 && response.Result) {
-        // 打开小窗口显示投屏 URL
-        const url = response.Result.url || response.Result.Url || response.Result;
-        const screenWidth = window.screen.width;
-        const screenHeight = window.screen.height;
-        const windowWidth = 800;
-        const windowHeight = 600;
-        const left = (screenWidth - windowWidth) / 2;
-        const top = (screenHeight - windowHeight) / 2;
+      if (response.Code === 0 && response.Result) {
+        // 使用 iframe 方式显示投屏
+        let url = response.Result;
 
-        window.open(
-          url,
-          '设备投屏',
-          `width=${windowWidth},height=${windowHeight},left=${left},top=${top},resizable=yes,scrollbars=yes`
-        );
+        // 如果 URL 不包含协议前缀，添加 http://
+        if (url && !url.startsWith('http://') && !url.startsWith('https://')) {
+          url = `http://${url}`;
+        }
+
+        // 设置投屏 URL，打开模态框
+        setScreenMirroringUrl(url);
         toast.success('投屏已启动');
       } else {
         toast.error(response.Message || '投屏启动失败');
       }
     } catch (error) {
       console.error('投屏失败:', error);
-      toast.error('投屏失败，请重试');
+      toast.error('投屏失败,请重试');
     } finally {
-      setLoading(false);
+      setScreenMirroringLoading(false);
     }
   };
 
@@ -127,8 +139,18 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             <IconEdit className='mr-2 h-4 w-4' /> 编辑
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={onScreenMirroring} disabled={loading}>
-            <IconDeviceTv className='mr-2 h-4 w-4' /> 投屏
+          <DropdownMenuItem onClick={onScreenMirroring} disabled={isScreenMirroringLoading}>
+            {isScreenMirroringLoading ? (
+              <>
+                <IconLoader2 className='mr-2 h-4 w-4 animate-spin' />
+                投屏启动中...
+              </>
+            ) : (
+              <>
+                <IconDeviceTv className='mr-2 h-4 w-4' />
+                投屏
+              </>
+            )}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setInstallApkOpen(true)}>
             <IconPackage className='mr-2 h-4 w-4' /> 安装APK
@@ -156,6 +178,27 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         onOpenChange={setUninstallAppsOpen}
         device={data}
       />
+
+      {/* 投屏模态框 */}
+      <Dialog open={!!screenMirroringUrl} onOpenChange={(open) => !open && setScreenMirroringUrl(null)}>
+        <DialogContent className='max-w-[412px] w-[412px] h-[calc(100vh-4rem)] max-h-[750px] p-0 flex flex-col'>
+          <DialogHeader className='px-4 pt-4 pb-2 flex-shrink-0'>
+            <DialogTitle className='text-base'>
+              {data.DeviceName || '未命名设备'}:{data.DeviceID}
+            </DialogTitle>
+          </DialogHeader>
+          <div className='flex-1 overflow-hidden'>
+            {screenMirroringUrl && (
+              <iframe
+                src={screenMirroringUrl}
+                className='w-full h-full border-0'
+                title={`${data.DeviceName || '未命名设备'}投屏`}
+                allow='autoplay; encrypted-media'
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

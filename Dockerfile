@@ -16,7 +16,7 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 
 # 设置构建时的环境变量（直接从 .env.local 硬编码）
-ENV NEXT_PUBLIC_API_BASE_URL=http://47.76.31.189:25010/Api/DeviceMonitor
+ENV NEXT_PUBLIC_API_BASE_URL=/Api/DeviceMonitor
 ENV NEXT_PUBLIC_OSS_REGION=oss-cn-hongkong.aliyuncs.com
 ENV NEXT_PUBLIC_OSS_ACCESS_KEY_ID=LTAI5tHp4npyJuEr1XAYEigh
 ENV NEXT_PUBLIC_OSS_ACCESS_KEY_SECRET=8Gbjzr9kJfo0sVuoumJtlCLFukXWtY

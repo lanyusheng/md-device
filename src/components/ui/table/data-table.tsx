@@ -16,18 +16,29 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 interface DataTableProps<TData> extends React.ComponentProps<'div'> {
   table: TanstackTable<TData>;
   actionBar?: React.ReactNode;
+  isLoading?: boolean;
 }
 
 export function DataTable<TData>({
   table,
   actionBar,
-  children
+  children,
+  isLoading = false
 }: DataTableProps<TData>) {
   return (
     <div className='flex flex-1 flex-col space-y-4'>
       {children}
       <div className='relative flex flex-1'>
         <div className='absolute inset-0 flex overflow-hidden rounded-lg border'>
+          {/* Loading 覆盖层 */}
+          {isLoading && (
+            <div className='absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-sm'>
+              <div className='flex flex-col items-center gap-2'>
+                <div className='h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent' />
+                <p className='text-sm text-muted-foreground'>加载中...</p>
+              </div>
+            </div>
+          )}
           <ScrollArea className='h-full w-full'>
             <Table>
               <TableHeader className='bg-muted sticky top-0 z-10'>
