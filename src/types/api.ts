@@ -264,6 +264,8 @@ export interface DeviceSearchRequest {
   KeyWord: string | null;
   /** 分页对象 */
   PageObject: PageObject;
+  /** 分组ID (可选,用于按分组过滤) */
+  GroupID?: number | null;
 }
 
 /** 设备列表响应 */
@@ -312,6 +314,82 @@ export interface StartScreenMirroringParams {
 export interface StopScreenMirroringParams {
   /** 设备ID */
   DeviceID: string;
+}
+
+// ==================== 设备分组管理 ====================
+
+/** 设备分组 */
+export interface DeviceGroup {
+  /** 分组ID */
+  GroupID?: number;
+  /** 分组名称 */
+  GroupName: string | null;
+  /** 租户ID */
+  TenantID?: number;
+  /** 创建时间 */
+  CreateTime?: string;
+  /** 更新时间 */
+  UpdateTime?: string;
+  /** 设备数量 */
+  DeviceCount?: number;
+}
+
+/** 分组搜索请求 */
+export interface GroupSearchRequest {
+  /** 搜索关键词 */
+  KeyWord: string | null;
+  /** 分页对象 */
+  PageObject: PageObject;
+}
+
+/** 分组列表响应 */
+export interface GroupPageResponse {
+  /** 当前页码 */
+  PageIndex: number;
+  /** 每页数量 */
+  PageSize: number;
+  /** 总页数 */
+  PageCount: number;
+  /** 总记录数 */
+  RecordCount: number;
+  /** 分组列表 */
+  ResultList: DeviceGroup[];
+}
+
+/** 添加分组请求 */
+export interface AddDeviceGroupRequest {
+  /** 分组名称 */
+  GroupName: string;
+}
+
+/** 更新分组请求 */
+export interface UpdateDeviceGroupRequest {
+  /** 分组ID */
+  GroupID: number;
+  /** 分组名称 */
+  GroupName: string;
+}
+
+/** 删除分组参数 */
+export interface DeleteDeviceGroupParams {
+  /** 分组ID */
+  GroupID: number;
+}
+
+/** 批量投屏信息 */
+export interface BatchScreenMirroringInfo {
+  /** 设备ID */
+  DeviceID: string;
+  /** 设备名称 */
+  DeviceName: string;
+  /** 投屏URL */
+  ScreenUrl: string | null;
+  /** 加载状态 */
+  isLoading: boolean;
+  /** 当前状态 */
+  status: 'connecting' | 'playing' | 'paused' | 'error';
+  /** 错误信息 */
+  error: string | null;
 }
 
 // ==================== 阿里云OSS ====================

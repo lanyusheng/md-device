@@ -1,18 +1,20 @@
 'use client';
 
-import { DataTableViewOptions } from '@/components/ui/table/data-table-view-options';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Table } from '@tanstack/react-table';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import {
+  IconLayoutGrid,
   IconPackage,
   IconPlus,
   IconRefresh,
-  IconTrash
+  IconTrash,
 } from '@tabler/icons-react';
+import { DataTableViewOptions } from '@/components/ui/table/data-table-view-options';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { useDeviceStore } from '../../store/device.store';
-import * as React from 'react';
 import { toast } from 'sonner';
 import { InstallApkDrawer } from '../install-apk-drawer';
 import { Device } from '@/types/api';
@@ -22,50 +24,66 @@ interface DeviceToolbarProps<TData> {
 }
 
 export function DeviceToolbar<TData>({ table }: DeviceToolbarProps<TData>) {
-  const isFiltered =
-    table.getState().columnFilters.length > 0 || table.getState().globalFilter;
-  const { openDrawer, refreshDevices, batchDeleteDevices, isLoading } =
-    useDeviceStore();
+  const router = useRouter();
+  const { openDrawer, refreshDevices, batchDeleteDevices, isLoading } = useDeviceStore();
+  const [installApkDrawerOpen, setInstallApkDrawerOpen] = useState(false);
 
+  const tableState = table.getState();
+  const isFiltered = tableState.columnFilters.length > 0 || !!tableState.globalFilter;
   const selectedRows = table.getFilteredSelectedRowModel().rows;
   const hasSelected = selectedRows.length > 0;
 
-  // 批量安装APK抽屉状态
-  const [installApkDrawerOpen, setInstallApkDrawerOpen] = React.useState(false);
+  const selectedDevices = useMemo(
+    () => selectedRows.map((row: any) => row.original as Device),
+    [selectedRows]
+  );
+
+  const selectedDeviceIds = useMemo(
+    () =>
+      selectedDevices
+        .map((device) => device.DeviceID)
+        .filter((id): id is string => Boolean(id)),
+    [selectedDevices]
+  );
 
   const handleBatchDelete = async () => {
     if (!hasSelected) return;
 
-    const deviceIds = selectedRows
-      .map((row: any) => row.original.DeviceID)
-      .filter(Boolean);
-
-    if (deviceIds.length === 0) {
+    if (selectedDeviceIds.length === 0) {
       toast.error('没有选中有效的设备');
       return;
     }
 
     try {
-      await batchDeleteDevices(deviceIds);
-      toast.success(`成功删除 ${deviceIds.length} 个设备`);
+      await batchDeleteDevices(selectedDeviceIds);
+      toast.success(`成功删除 ${selectedDeviceIds.length} 个设备`);
       table.resetRowSelection();
     } catch (error) {
+      console.error('Failed to batch delete devices:', error);
       toast.error('批量删除失败');
     }
+  };
+
+  const handleBatchScreen = () => {
+    if (selectedDeviceIds.length === 0) {
+      toast.error('请选择至少一个可投屏的设备');
+      return;
+    }
+
+    const query = encodeURIComponent(selectedDeviceIds.join(','));
+    router.push(`/dashboard/batch-screen?devices=${query}`);
   };
 
   return (
     <div className='flex w-full items-start justify-between gap-2 p-1'>
       <div className='flex flex-1 flex-wrap items-center gap-2'>
-        {/* 全局搜索框 */}
         <Input
           placeholder='搜索设备ID、名称、IP...'
-          value={table.getState().globalFilter ?? ''}
+          value={tableState.globalFilter ?? ''}
           onChange={(event) => table.setGlobalFilter(event.target.value)}
           className='h-8 w-40 lg:w-64'
         />
 
-        {/* 批量操作按钮 */}
         {hasSelected && (
           <>
             <Button
@@ -77,6 +95,16 @@ export function DeviceToolbar<TData>({ table }: DeviceToolbarProps<TData>) {
             >
               <IconPackage className='mr-2 h-4 w-4' />
               批量安装APK ({selectedRows.length})
+            </Button>
+            <Button
+              variant='outline'
+              size='sm'
+              className='h-8'
+              onClick={handleBatchScreen}
+              disabled={isLoading || selectedDeviceIds.length === 0}
+            >
+              <IconLayoutGrid className='mr-2 h-4 w-4' />
+              批量投屏 ({selectedRows.length})
             </Button>
             <Button
               variant='destructive'
@@ -109,7 +137,6 @@ export function DeviceToolbar<TData>({ table }: DeviceToolbarProps<TData>) {
       </div>
 
       <div className='flex items-center gap-2'>
-        {/* 刷新按钮 */}
         <Button
           variant='outline'
           size='sm'
@@ -121,7 +148,6 @@ export function DeviceToolbar<TData>({ table }: DeviceToolbarProps<TData>) {
           刷新
         </Button>
 
-        {/* 新建设备按钮 */}
         <Button
           variant='default'
           size='sm'
@@ -135,11 +161,10 @@ export function DeviceToolbar<TData>({ table }: DeviceToolbarProps<TData>) {
         <DataTableViewOptions table={table} />
       </div>
 
-      {/* 批量安装APK抽屉 */}
       <InstallApkDrawer
         open={installApkDrawerOpen}
         onOpenChange={setInstallApkDrawerOpen}
-        devices={selectedRows.map((row: any) => row.original as Device)}
+        devices={selectedDevices}
       />
     </div>
   );

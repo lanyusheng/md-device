@@ -87,10 +87,11 @@ export const columns: ColumnDef<Device>[] = [
     enableHiding: false
   },
   {
+    id: 'status',
     accessorKey: 'UpdateTime',
     header: '状态',
     cell: ({ row }) => {
-      const online = isDeviceOnline(row.getValue('UpdateTime'));
+      const online = isDeviceOnline(row.getValue('status'));
       return (
         <div className='flex items-center gap-1.5'>
           <div

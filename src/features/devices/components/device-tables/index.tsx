@@ -73,6 +73,14 @@ export function DeviceTable({
     getFacetedUniqueValues: getFacetedUniqueValues()
   });
 
+  // 调试输出
+  React.useEffect(() => {
+    console.log('[DeviceTable] data:', data);
+    console.log('[DeviceTable] data.length:', data?.length);
+    console.log('[DeviceTable] table.getRowModel().rows:', table.getRowModel().rows);
+    console.log('[DeviceTable] table.getRowModel().rows.length:', table.getRowModel().rows?.length);
+  }, [data, table]);
+
   // 如果正在加载，显示骨架屏
   if (isLoading && data.length === 0) {
     return (

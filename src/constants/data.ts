@@ -28,6 +28,14 @@ export const navItems: NavItem[] = [
     shortcut: ['d', 'v'],
     isActive: false,
     items: [] // No child items
+  },
+  {
+    title: 'Batch Screen',
+    url: '/dashboard/batch-screen',
+    icon: 'monitor',
+    shortcut: ['b', 's'],
+    isActive: false,
+    items: [] // No child items
   }
 ];
 

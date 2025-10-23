@@ -20,6 +20,14 @@ export default function DeviceListingPage() {
     fetchDevices();
   }, [fetchDevices]);
 
+  // 调试输出
+  useEffect(() => {
+    console.log('[DeviceListingPage] devices:', devices);
+    console.log('[DeviceListingPage] devices.length:', devices?.length);
+    console.log('[DeviceListingPage] totalDevices:', totalDevices);
+    console.log('[DeviceListingPage] isLoading:', isLoading);
+  }, [devices, totalDevices, isLoading]);
+
   return (
     <>
       {/* 投屏全局 Loading 覆盖层 */}

@@ -4,6 +4,9 @@ import PageContainer from '@/components/layout/page-container';
 import { Heading } from '@/components/ui/heading';
 import { Separator } from '@/components/ui/separator';
 import DeviceListingPage from '@/features/devices/components/device-listing';
+import { DeviceGroupPanel } from '@/features/devices/components/device-group-panel';
+import { DeviceGroupDrawer } from '@/features/devices/components/device-group-drawer';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 
 export default function Page() {
   return (
@@ -16,7 +19,27 @@ export default function Page() {
           />
         </div>
         <Separator />
-        <DeviceListingPage />
+
+        <ResizablePanelGroup
+          direction='horizontal'
+          className='flex-1 rounded-lg border'
+        >
+          <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
+            <div className='h-full p-4'>
+              <DeviceGroupPanel />
+            </div>
+          </ResizablePanel>
+
+          <ResizableHandle withHandle />
+
+          <ResizablePanel defaultSize={80}>
+            <div className='h-full p-4'>
+              <DeviceListingPage />
+            </div>
+          </ResizablePanel>
+        </ResizablePanelGroup>
+
+        <DeviceGroupDrawer />
       </div>
     </PageContainer>
   );
