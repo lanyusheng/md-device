@@ -11,7 +11,8 @@ import {
   IconEdit,
   IconTrash,
   IconFolderFilled,
-  IconLayoutGrid
+  IconLayoutGrid,
+  IconRefresh
 } from '@tabler/icons-react';
 import { DeviceGroup } from '@/types/api';
 import { AlertModal } from '@/components/modal/alert-modal';
@@ -71,21 +72,10 @@ export function DeviceGroupPanel() {
   return (
     <>
       <Card className='h-full flex flex-col'>
-        <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-4'>
-          <CardTitle className='text-lg font-medium'>设备分组</CardTitle>
-          <Button
-            size='sm'
-            onClick={() => openDrawer('create')}
-            className='h-8'
-          >
-            <IconPlus className='h-4 w-4 mr-1' />
-            新建
-          </Button>
-        </CardHeader>
-        <CardContent className='flex-1 overflow-hidden p-0 px-6 pb-6'>
+        <CardContent className='flex-1 overflow-hidden p-4'>
           <ScrollArea className='h-full'>
             <div className='space-y-2'>
-              {/* 全部设备 */}
+              {/* 全部分组 */}
               <div
                 className={cn(
                   'flex items-center justify-between px-3 py-2 rounded-md cursor-pointer transition-colors',
@@ -97,7 +87,32 @@ export function DeviceGroupPanel() {
               >
                 <div className='flex items-center gap-2'>
                   <IconLayoutGrid className='h-4 w-4' />
-                  <span className='font-medium'>全部设备</span>
+                  <span className='font-medium'>全部分组 ({groups.length})</span>
+                </div>
+                <div className='flex items-center gap-1'>
+                  <Button
+                    size='icon'
+                    variant='ghost'
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      fetchGroups();
+                    }}
+                    disabled={isLoading}
+                    className='h-6 w-6'
+                  >
+                    <IconRefresh className='h-3 w-3' />
+                  </Button>
+                  <Button
+                    size='icon'
+                    variant='ghost'
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openDrawer('create');
+                    }}
+                    className='h-6 w-6'
+                  >
+                    <IconPlus className='h-3 w-3' />
+                  </Button>
                 </div>
               </div>
 

@@ -99,44 +99,46 @@ export function DeviceGroupDrawer() {
         </SheetHeader>
 
         <div className='mt-6'>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-              <FormField
-                control={form.control}
-                name='groupName'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>分组名称</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='请输入分组名称'
-                        {...field}
-                        disabled={isLoading}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          <Form
+            form={form}
+            onSubmit={form.handleSubmit(onSubmit)}
+            className='space-y-6'
+          >
+            <FormField
+              control={form.control}
+              name='groupName'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>分组名称</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder='请输入分组名称'
+                      {...field}
+                      disabled={isLoading}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              <div className='flex gap-2 justify-end'>
-                <Button
-                  type='button'
-                  variant='outline'
-                  onClick={handleClose}
-                  disabled={isLoading}
-                >
-                  取消
-                </Button>
-                <Button type='submit' disabled={isLoading}>
-                  {isLoading
-                    ? '保存中...'
-                    : drawerMode === 'create'
-                      ? '创建'
-                      : '保存'}
-                </Button>
-              </div>
-            </form>
+            <div className='flex gap-2 justify-end'>
+              <Button
+                type='button'
+                variant='outline'
+                onClick={handleClose}
+                disabled={isLoading}
+              >
+                取消
+              </Button>
+              <Button type='submit' disabled={isLoading}>
+                {isLoading
+                  ? '保存中...'
+                  : drawerMode === 'create'
+                    ? '创建'
+                    : '保存'}
+              </Button>
+            </div>
           </Form>
         </div>
       </SheetContent>

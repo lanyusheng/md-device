@@ -37,6 +37,7 @@ interface DeviceActions {
   updateDevice: (deviceId: string, device: Device) => Promise<void>;
   deleteDevice: (deviceId: string) => Promise<void>;
   batchDeleteDevices: (deviceIds: string[]) => Promise<void>;
+  batchAssignDevicesToGroup: (deviceIds: string[], groupId: number) => Promise<void>;
 
   // UI 操作
   setSelectedDevice: (device: Device | null) => void;
@@ -206,6 +207,45 @@ export const useDeviceStore = create<DeviceStore>()(
           await get().refreshDevices();
         } catch (error) {
           console.error('Failed to batch delete devices:', error);
+          throw error;
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+
+      // 批量分配设备到分组
+      batchAssignDevicesToGroup: async (deviceIds, groupId) => {
+        set({ isLoading: true });
+        try {
+          const { devices } = get();
+
+          // 找到需要更新的设备
+          const devicesToUpdate = devices.filter(
+            (device) => device.DeviceID && deviceIds.includes(device.DeviceID)
+          );
+
+          // 批量更新设备的 GroupID
+          await Promise.all(
+            devicesToUpdate.map(async (device) => {
+              if (!device.DeviceID) return;
+
+              const updatedDevice: Device = {
+                ...device,
+                GroupID: groupId,
+              };
+
+              const data = {
+                TenantId: device.TenantID,
+                Device: updatedDevice,
+              };
+
+              await deviceService.updateDevice(device.DeviceID, data);
+            })
+          );
+
+          await get().refreshDevices();
+        } catch (error) {
+          console.error('Failed to batch assign devices to group:', error);
           throw error;
         } finally {
           set({ isLoading: false });

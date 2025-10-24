@@ -18,7 +18,7 @@ interface GroupState {
   drawerMode: 'create' | 'edit';
 
   // 搜索状态
-  searchKeyword: string;
+  searchKeyword: string | null;
 }
 
 interface GroupActions {
@@ -34,7 +34,7 @@ interface GroupActions {
   closeDrawer: () => void;
 
   // 搜索和分页
-  setSearchKeyword: (keyword: string) => void;
+  setSearchKeyword: (keyword: string | null) => void;
   setPage: (page: number) => void;
   setPageSize: (pageSize: number) => void;
 
@@ -61,7 +61,7 @@ export const useGroupStore = create<GroupStore>()(
       isLoading: false,
       isDrawerOpen: false,
       drawerMode: 'create',
-      searchKeyword: '',
+      searchKeyword: null,  // null 表示不过滤
 
       // 获取分组列表
       fetchGroups: async (request) => {
@@ -75,16 +75,19 @@ export const useGroupStore = create<GroupStore>()(
 
           const response = await groupService.getDeviceGroupList(searchRequest);
 
-          // Code === 0 表示成功
           if (response.Code === 0 && response.Result) {
+            const result = response.Result;
+            // 直接从Result中提取数据
+            const groupsList = Array.isArray(result) ? result : (result.ResultList || []);
+
             set({
-              groups: response.Result.ResultList || [],
-              totalGroups: response.Result.RecordCount || 0,
+              groups: groupsList,
+              totalGroups: Array.isArray(result) ? result.length : (result.RecordCount || 0),
               pageInfo: {
-                PageIndex: response.Result.PageIndex || 1,
-                PageSize: response.Result.PageSize || 10000,
-                PageCount: response.Result.PageCount || 0,
-                RecordCount: response.Result.RecordCount || 0,
+                PageIndex: result.PageIndex || 1,
+                PageSize: result.PageSize || 10000,
+                PageCount: result.PageCount || 0,
+                RecordCount: result.RecordCount || 0,
                 AskSummary: true,
               },
             });

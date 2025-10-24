@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import { ActiveThemeProvider } from '../active-theme';
+import { PermissionProvider } from '../providers/permission-provider';
 
 export default function Providers({
   activeThemeValue,
@@ -11,7 +12,7 @@ export default function Providers({
 }) {
   return (
     <ActiveThemeProvider initialTheme={activeThemeValue}>
-      {children}
+      <PermissionProvider>{children}</PermissionProvider>
     </ActiveThemeProvider>
   );
 }

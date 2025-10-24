@@ -24,8 +24,8 @@ const baseConfig: NextConfig = {
     return [
       {
         source: "/Api/:path*",
-         destination: "http://api.release.xkdevice.com:25010/Api/:path*",
-       // destination: "http://47.76.31.189:25010/Api/:path*",
+        // destination: "http://api.release.xkdevice.com:25010/Api/:path*",
+       destination: "http://47.76.31.189:25010/Api/:path*",
       },
     ];
   },

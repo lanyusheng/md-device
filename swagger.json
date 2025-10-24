@@ -148,6 +148,248 @@
         }
       }
     },
+    "/Api/DeviceMonitor/Device/AddDeviceGroup": {
+      "post": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "创建设备分组",
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceGroup"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceGroup"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceGroup"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceGroup"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Api/DeviceMonitor/Device/DeleteDeviceGroup": {
+      "get": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "删除设备分组",
+        "parameters": [
+          {
+            "name": "GroupID",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Api/DeviceMonitor/Device/UpdateDeviceGroup": {
+      "post": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "修改设备分组",
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceGroup"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceGroup"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceGroup"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceGroup"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Api/DeviceMonitor/Device/GetDeviceGroup": {
+      "get": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "查询设备分组",
+        "parameters": [
+          {
+            "name": "GroupID",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Api/DeviceMonitor/Device/GetDeviceGroupList": {
+      "post": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "分页搜索设备分组列表",
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceGroupSearchRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceGroupSearchRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceGroupSearchRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceGroupSearchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/Api/DeviceMonitor/Device/AddDevice": {
       "post": {
         "tags": [
@@ -301,35 +543,26 @@
           "Device"
         ],
         "summary": "修改设备资料",
-        "parameters": [
-          {
-            "name": "DeviceID",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json-patch+json": {
               "schema": {
-                "$ref": "#/components/schemas/DeviceProfileState"
+                "$ref": "#/components/schemas/Device"
               }
             },
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DeviceProfileState"
+                "$ref": "#/components/schemas/Device"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/DeviceProfileState"
+                "$ref": "#/components/schemas/Device"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/DeviceProfileState"
+                "$ref": "#/components/schemas/Device"
               }
             }
           }
@@ -384,6 +617,60 @@
             "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/DeviceState"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Api/DeviceMonitor/Device/UpdateDeviceRemark": {
+      "post": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "修改设备备注",
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Device"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Device"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Device"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Device"
               }
             }
           }
@@ -730,6 +1017,356 @@
         }
       }
     },
+    "/Api/DeviceMonitor/Device/StartShell": {
+      "get": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "开始Shell",
+        "parameters": [
+          {
+            "name": "DeviceID",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Api/DeviceMonitor/Device/StopShell": {
+      "get": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "停止Shell",
+        "parameters": [
+          {
+            "name": "DeviceID",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Api/DeviceMonitor/Device/CreateReverseProxy": {
+      "get": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "创建端口映射",
+        "parameters": [
+          {
+            "name": "DeviceID",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Api/DeviceMonitor/Device/DeleteReverseProxy": {
+      "get": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "删除端口映射",
+        "parameters": [
+          {
+            "name": "DeviceID",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Api/DeviceMonitor/Device/GetScreenXml": {
+      "get": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "获取屏幕XML结构",
+        "parameters": [
+          {
+            "name": "DeviceID",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Api/DeviceMonitor/Device/UpdateScript": {
+      "post": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "更新脚本",
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateScriptRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateScriptRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateScriptRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateScriptRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Api/DeviceMonitor/Device/GetWebsite": {
+      "post": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "获取网页内容",
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetWebsitetRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetWebsitetRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetWebsitetRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetWebsitetRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Api/DeviceMonitor/Device/GetLog": {
+      "get": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "获取日志",
+        "parameters": [
+          {
+            "name": "DeviceID",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "LineCount",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/Api/DeviceMonitor/Device/ReportDeviceState": {
       "post": {
         "tags": [
@@ -756,6 +1393,60 @@
             "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/DeviceState"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Api/DeviceMonitor/Log/GetLogList": {
+      "post": {
+        "tags": [
+          "Log"
+        ],
+        "summary": "查询日志列表",
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnitiveParameter"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnitiveParameter"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnitiveParameter"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnitiveParameter"
               }
             }
           }
@@ -984,6 +1675,101 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Api/DeviceMonitor/Permission/AddLocationUser": {
+      "post": {
+        "tags": [
+          "Permission"
+        ],
+        "summary": "增加操作员",
+        "requestBody": {
+          "description": "统一通用参数",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnitiveParameter"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnitiveParameter"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnitiveParameter"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnitiveParameter"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Api/DeviceMonitor/Permission/QuitLocationUser": {
+      "get": {
+        "tags": [
+          "Permission"
+        ],
+        "summary": "移除操作员",
+        "parameters": [
+          {
+            "name": "UID",
+            "in": "query",
+            "description": "操作员编号",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -1571,7 +2357,7 @@
         "tags": [
           "Permission"
         ],
-        "summary": "向指定角色进行模块授权",
+        "summary": "向指定角色进行接口授权",
         "requestBody": {
           "description": "统一通用参数",
           "content": {
@@ -1818,6 +2604,15 @@
             "description": "剩余电量（百分比）",
             "format": "double"
           },
+          "DiskUsagePercent": {
+            "type": "number",
+            "description": "存储占用（百分比）",
+            "format": "double"
+          },
+          "HasSimCard": {
+            "type": "boolean",
+            "description": "是否安装了SIM卡"
+          },
           "PublicIP": {
             "type": "string",
             "description": "公网IP地址",
@@ -1838,10 +2633,40 @@
             "description": "分组编号",
             "format": "int32"
           },
+          "GroupName": {
+            "type": "string",
+            "description": "分组名称",
+            "nullable": true
+          },
+          "CabinetID": {
+            "type": "string",
+            "description": "机箱编号",
+            "nullable": true
+          },
+          "SlotID": {
+            "type": "string",
+            "description": "卡槽编号",
+            "nullable": true
+          },
+          "Remark": {
+            "type": "string",
+            "description": "备注",
+            "nullable": true
+          },
           "UpdateTime": {
             "type": "string",
             "description": "更新时间",
             "format": "date-time"
+          },
+          "LastBootTime": {
+            "type": "string",
+            "description": "系统启动时间",
+            "format": "date-time"
+          },
+          "LastOfflineState": {
+            "type": "boolean",
+            "description": "null=未知, true=离线, false=在线",
+            "nullable": true
           },
           "AccountWorking": {
             "type": "boolean",
@@ -1852,15 +2677,46 @@
         "additionalProperties": false,
         "description": "设备"
       },
-      "DeviceProfileState": {
+      "DeviceGroup": {
         "type": "object",
         "properties": {
-          "TenantId": {
+          "TenantID": {
             "type": "integer",
             "format": "int64"
           },
-          "Device": {
-            "$ref": "#/components/schemas/Device"
+          "GroupID": {
+            "type": "integer",
+            "description": "分组编号",
+            "format": "int64"
+          },
+          "ParentID": {
+            "type": "integer",
+            "description": "上级编号",
+            "format": "int64"
+          },
+          "GroupName": {
+            "type": "string",
+            "description": "分组名称",
+            "nullable": true
+          },
+          "DeviceCount": {
+            "type": "integer",
+            "description": "设备数量",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "设备分组"
+      },
+      "DeviceGroupSearchRequest": {
+        "type": "object",
+        "properties": {
+          "KeyWord": {
+            "type": "string",
+            "nullable": true
+          },
+          "PageObject": {
+            "$ref": "#/components/schemas/PageObject"
           }
         },
         "additionalProperties": false
@@ -1881,17 +2737,17 @@
       "DeviceState": {
         "type": "object",
         "properties": {
-          "type": {
+          "Type": {
             "type": "string",
             "description": "报文类型，例如 \"STAT\"",
             "nullable": true
           },
-          "ID": {
+          "DeviceID": {
             "type": "string",
             "description": "设备唯一标识符（UUID）",
             "nullable": true
           },
-          "timestamp": {
+          "Timestamp": {
             "type": "number",
             "description": "时间戳，单位为秒（Unix 时间戳带小数）",
             "format": "double"
@@ -1902,6 +2758,23 @@
         },
         "additionalProperties": false,
         "description": "设备上报信息"
+      },
+      "GetWebsitetRequest": {
+        "type": "object",
+        "properties": {
+          "DeviceIdList": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "WebUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "IdCardData": {
         "type": "object",
@@ -2146,6 +3019,15 @@
             "description": "剩余电量（百分比）",
             "format": "double"
           },
+          "DiskUsagePercent": {
+            "type": "number",
+            "description": "存储占用（百分比）",
+            "format": "double"
+          },
+          "HasSimCard": {
+            "type": "boolean",
+            "description": "是否安装了SIM卡"
+          },
           "PublicIP": {
             "type": "string",
             "description": "公网IP",
@@ -2164,6 +3046,11 @@
           "TopIP": {
             "type": "string",
             "description": "置顶时的 IP 地址（如适用）",
+            "nullable": true
+          },
+          "DebugInfo": {
+            "type": "string",
+            "description": "调试信息",
             "nullable": true
           }
         },
@@ -2212,6 +3099,23 @@
             "type": "string",
             "nullable": true,
             "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateScriptRequest": {
+        "type": "object",
+        "properties": {
+          "DeviceIdList": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "ScriptUrl": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

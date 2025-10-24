@@ -120,15 +120,6 @@ class ApiClient {
 
     const fullUrl = this.buildUrl(url, params);
 
-    // 打印请求日志（开发环境）
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🚀 API Request:', {
-        method: options.method || 'GET',
-        url: fullUrl,
-        params,
-        body: options.body
-      });
-    }
 
     try {
       const controller = new AbortController();
@@ -145,13 +136,6 @@ class ApiClient {
 
       clearTimeout(timeoutId);
 
-      // 打印响应日志（开发环境）
-      if (process.env.NODE_ENV === 'development') {
-        console.log('✅ API Response:', {
-          url: fullUrl,
-          status: response.status
-        });
-      }
 
       // 处理 HTTP 错误
       if (!response.ok) {

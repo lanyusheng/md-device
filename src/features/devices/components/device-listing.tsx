@@ -5,6 +5,7 @@ import { useDeviceStore } from '../store/device.store';
 import { DeviceTable } from './device-tables';
 import { columns } from './device-tables/columns';
 import { DeviceDrawer } from './device-drawer';
+import { DeviceGroupDrawer } from './device-group-drawer';
 
 export default function DeviceListingPage() {
   const {
@@ -29,7 +30,7 @@ export default function DeviceListingPage() {
   }, [devices, totalDevices, isLoading]);
 
   return (
-    <>
+    <div className='flex h-full flex-col'>
       {/* 投屏全局 Loading 覆盖层 */}
       {isScreenMirroringLoading && (
         <div className='fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm'>
@@ -52,6 +53,7 @@ export default function DeviceListingPage() {
         isLoading={isLoading}
       />
       <DeviceDrawer />
-    </>
+      <DeviceGroupDrawer />
+    </div>
   );
 }

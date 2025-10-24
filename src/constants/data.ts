@@ -13,29 +13,58 @@ export type Product = {
 
 //Info: The following data is used for the sidebar navigation and Cmd K bar.
 export const navItems: NavItem[] = [
+  // {
+  //   title: '数据看板',
+  //   url: '/dashboard/overview',
+  //   icon: 'dashboard',
+  //   isActive: false,
+  //   shortcut: ['d', 'd'],
+  //   items: [] // Empty array as there are no child items for Dashboard
+  // },
   {
-    title: 'Dashboard',
-    url: '/dashboard/overview',
-    icon: 'dashboard',
-    isActive: false,
-    shortcut: ['d', 'd'],
-    items: [] // Empty array as there are no child items for Dashboard
-  },
-  {
-    title: 'Devices',
+    title: '设备管理',
     url: '/dashboard/devices',
     icon: 'laptop',
     shortcut: ['d', 'v'],
     isActive: false,
     items: [] // No child items
   },
+  // {
+  //   title: '批量投屏',
+  //   url: '/dashboard/batch-screen',
+  //   icon: 'monitor',
+  //   shortcut: ['b', 's'],
+  //   isActive: false,
+  //   items: [] // No child items
+  // },
   {
-    title: 'Batch Screen',
-    url: '/dashboard/batch-screen',
-    icon: 'monitor',
-    shortcut: ['b', 's'],
+    title: '权限管理',
+    url: '#', // Parent item, no direct URL
+    icon: 'user',
+    shortcut: ['p', 'm'],
     isActive: false,
-    items: [] // No child items
+    items: [
+      {
+        title: '公司管理',
+        url: '/dashboard/companies',
+        moduleCode: 'COMPANY_MANAGEMENT' // Example module code
+      },
+      {
+        title: '业务管理',
+        url: '/dashboard/businesses',
+        moduleCode: 'BUSINESS_MANAGEMENT' // Example module code
+      },
+      {
+        title: '角色管理',
+        url: '/dashboard/roles',
+        moduleCode: 'ROLE_MANAGEMENT' // Example module code
+      },
+      {
+        title: '用户管理',
+        url: '/dashboard/users',
+        moduleCode: 'USER_MANAGEMENT' // Example module code
+      }
+    ]
   }
 ];
 

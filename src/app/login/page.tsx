@@ -26,6 +26,7 @@ export default function LoginPage() {
     try {
       // 动态导入 authService 以避免 SSR 问题
       const { authService } = await import('@/services/auth.service');
+      const { useAuthStore } = await import('@/stores/auth.store');
 
       const response = await authService.login({
         username,
@@ -34,6 +35,17 @@ export default function LoginPage() {
 
       // Code === 0 表示成功
       if (response.Code === 0) {
+        // 保存用户信息到状态管理
+        const userInfo = {
+          uid: response.Result?.UID || response.Result?.UserLocation?.UID,
+          username: username,
+          mobilePhone: response.Result?.MobilePhone || response.Result?.UserLocation?.MobilePhone,
+          roleId: response.Result?.RoleID,
+          roleName: response.Result?.RoleName
+        };
+
+        useAuthStore.getState().setUserInfo(userInfo);
+
         toast.success('登录成功');
         router.push('/dashboard');
         router.refresh();

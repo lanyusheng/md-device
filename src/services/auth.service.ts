@@ -89,8 +89,14 @@ class AuthService {
   /**
    * 用户登出
    */
-  logout(): void {
+  async logout(): Promise<void> {
     TokenManager.removeToken();
+
+    // 清除用户信息
+    if (typeof window !== 'undefined') {
+      const { useAuthStore } = await import('@/stores/auth.store');
+      useAuthStore.getState().clearUserInfo();
+    }
 
     // 清除 cookie
     if (typeof document !== 'undefined') {
