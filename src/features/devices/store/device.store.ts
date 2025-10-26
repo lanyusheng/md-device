@@ -38,6 +38,7 @@ interface DeviceActions {
   deleteDevice: (deviceId: string) => Promise<void>;
   batchDeleteDevices: (deviceIds: string[]) => Promise<void>;
   batchAssignDevicesToGroup: (deviceIds: string[], groupId: number) => Promise<void>;
+  batchUpdateDeviceFields: (deviceIds: string[], fields: Partial<Device>) => Promise<void>;
 
   // UI 操作
   setSelectedDevice: (device: Device | null) => void;
@@ -217,35 +218,44 @@ export const useDeviceStore = create<DeviceStore>()(
       batchAssignDevicesToGroup: async (deviceIds, groupId) => {
         set({ isLoading: true });
         try {
-          const { devices } = get();
-
-          // 找到需要更新的设备
-          const devicesToUpdate = devices.filter(
-            (device) => device.DeviceID && deviceIds.includes(device.DeviceID)
-          );
-
-          // 批量更新设备的 GroupID
+          // 循环调用UpdateDevice接口，只传DeviceID和GroupID
           await Promise.all(
-            devicesToUpdate.map(async (device) => {
-              if (!device.DeviceID) return;
-
-              const updatedDevice: Device = {
-                ...device,
-                GroupID: groupId,
-              };
-
+            deviceIds.map(async (deviceId) => {
               const data = {
-                TenantId: device.TenantID,
-                Device: updatedDevice,
+                DeviceID: deviceId,
+                GroupID: groupId
               };
-
-              await deviceService.updateDevice(device.DeviceID, data);
+              await deviceService.updateDevice(deviceId, data as any);
             })
           );
 
           await get().refreshDevices();
         } catch (error) {
           console.error('Failed to batch assign devices to group:', error);
+          throw error;
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+
+      // 批量更新设备字段（机箱编号、卡槽编号、备注等）
+      batchUpdateDeviceFields: async (deviceIds, fields) => {
+        set({ isLoading: true });
+        try {
+          // 循环调用UpdateDevice接口，只传DeviceID和要更新的字段
+          await Promise.all(
+            deviceIds.map(async (deviceId) => {
+              const data = {
+                DeviceID: deviceId,
+                ...fields
+              };
+              await deviceService.updateDevice(deviceId, data as any);
+            })
+          );
+
+          await get().refreshDevices();
+        } catch (error) {
+          console.error('Failed to batch update device fields:', error);
           throw error;
         } finally {
           set({ isLoading: false });

@@ -8,6 +8,6 @@ export default async function Page() {
   if (!isAuthenticated) {
     redirect('/login');
   } else {
-    redirect('/dashboard');
+    redirect('/dashboard/devices');
   }
 }

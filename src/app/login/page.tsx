@@ -47,7 +47,7 @@ export default function LoginPage() {
         useAuthStore.getState().setUserInfo(userInfo);
 
         toast.success('登录成功');
-        router.push('/dashboard');
+        router.push('/dashboard/devices');
         router.refresh();
       } else {
         // 非 0 时，Result 字段是错误提示

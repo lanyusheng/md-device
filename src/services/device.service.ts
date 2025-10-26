@@ -8,7 +8,9 @@ import {
   RemoveDeviceDto,
   DeviceProfileState,
   InstallApkRequest,
-  UninstallApkRequest
+  UninstallApkRequest,
+  BatchShellRequest,
+  BatchShellResult
 } from '@/types/api';
 
 /**
@@ -48,7 +50,7 @@ class DeviceService {
     data: DeviceProfileState
   ): Promise<ApiResponse<any>> {
     return apiClient.post(
-      `${this.baseUrl}/UpdateDevice?DeviceID=${deviceId}`,
+      `${this.baseUrl}/UpdateDevice`,
       data
     );
   }
@@ -116,6 +118,15 @@ class DeviceService {
    */
   async reportDeviceState(state: DeviceState): Promise<ApiResponse<any>> {
     return apiClient.post(`${this.baseUrl}/ReportDeviceState`, state);
+  }
+
+  /**
+   * 批量执行Shell命令
+   */
+  async batchShell(
+    request: BatchShellRequest
+  ): Promise<ApiResponse<Record<string, BatchShellResult>>> {
+    return apiClient.post(`${this.baseUrl}/BatchShell`, request);
   }
 }
 

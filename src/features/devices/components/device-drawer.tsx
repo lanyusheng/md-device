@@ -1,6 +1,7 @@
 'use client';
 
 import { FormInput } from '@/components/forms/form-input';
+import { FormSelect } from '@/components/forms/form-select';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import {
@@ -18,6 +19,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
 import { useDeviceStore } from '../store/device.store';
+import { useGroupStore } from '../store/group.store';
 import { useEffect } from 'react';
 
 const formSchema = z.object({
@@ -31,7 +33,10 @@ const formSchema = z.object({
     .number()
     .min(1)
     .max(65535, { message: '端口范围1-65535' }),
-  GroupID: z.coerce.number().default(0)
+  GroupID: z.coerce.number().default(0),
+  CabinetID: z.string().optional(),
+  SlotID: z.string().optional(),
+  Remark: z.string().optional()
 });
 
 export function DeviceDrawer() {
@@ -45,8 +50,17 @@ export function DeviceDrawer() {
     isLoading
   } = useDeviceStore();
 
+  const { groups, fetchGroups } = useGroupStore();
+
   const isViewMode = drawerMode === 'view';
   const isEditMode = drawerMode === 'edit';
+
+  // 加载分组列表
+  useEffect(() => {
+    if (isDrawerOpen) {
+      fetchGroups();
+    }
+  }, [isDrawerOpen, fetchGroups]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -58,7 +72,10 @@ export function DeviceDrawer() {
       PublicIP: '',
       DefaultIP: '',
       ServicePort: 8080,
-      GroupID: 0
+      GroupID: 0,
+      CabinetID: '',
+      SlotID: '',
+      Remark: ''
     }
   });
 
@@ -73,7 +90,10 @@ export function DeviceDrawer() {
         PublicIP: selectedDevice.PublicIP || '',
         DefaultIP: selectedDevice.DefaultIP || '',
         ServicePort: selectedDevice.ServicePort || 8080,
-        GroupID: selectedDevice.GroupID || 0
+        GroupID: selectedDevice.GroupID || 0,
+        CabinetID: selectedDevice.CabinetID || '',
+        SlotID: selectedDevice.SlotID || '',
+        Remark: selectedDevice.Remark || ''
       });
     } else {
       form.reset({
@@ -84,7 +104,10 @@ export function DeviceDrawer() {
         PublicIP: '',
         DefaultIP: '',
         ServicePort: 8080,
-        GroupID: 0
+        GroupID: 0,
+        CabinetID: '',
+        SlotID: '',
+        Remark: ''
       });
     }
   }, [selectedDevice, isDrawerOpen, form]);
@@ -104,6 +127,9 @@ export function DeviceDrawer() {
         DefaultIP: values.DefaultIP || null,
         ServicePort: values.ServicePort,
         GroupID: values.GroupID,
+        CabinetID: values.CabinetID || null,
+        SlotID: values.SlotID || null,
+        Remark: values.Remark || null,
         UpdateTime: new Date().toISOString()
       };
 
@@ -218,15 +244,47 @@ export function DeviceDrawer() {
                 disabled={isViewMode}
               />
 
-              <FormInput
+              <FormSelect
                 control={form.control}
                 name='GroupID'
-                label='分组ID'
-                type='number'
-                placeholder='0'
+                label='设备分组'
+                placeholder='选择分组'
+                disabled={isViewMode}
+                options={[
+                  { label: '未分组', value: '0' },
+                  ...groups.map((group) => ({
+                    label: group.GroupName || '未命名分组',
+                    value: String(group.GroupID)
+                  }))
+                ]}
+              />
+            </div>
+
+            <div className='grid grid-cols-2 gap-4'>
+              <FormInput
+                control={form.control}
+                name='CabinetID'
+                label='机箱编号'
+                placeholder='输入机箱编号'
+                disabled={isViewMode}
+              />
+
+              <FormInput
+                control={form.control}
+                name='SlotID'
+                label='卡槽编号'
+                placeholder='输入卡槽编号'
                 disabled={isViewMode}
               />
             </div>
+
+            <FormInput
+              control={form.control}
+              name='Remark'
+              label='备注'
+              placeholder='输入备注信息'
+              disabled={isViewMode}
+            />
 
             {!isViewMode && (
               <SheetFooter>

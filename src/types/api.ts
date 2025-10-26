@@ -144,6 +144,14 @@ export interface Device {
   ServicePort: number;
   /** 分组编号 */
   GroupID: number;
+  /** 分组名称（用于显示，从关联查询获取） */
+  GroupName?: string | null;
+  /** 机箱编号 */
+  CabinetID?: string | null;
+  /** 卡槽编号 */
+  SlotID?: string | null;
+  /** 备注 */
+  Remark?: string | null;
   /** 更新时间 */
   UpdateTime: string;
 }
@@ -298,6 +306,29 @@ export interface UninstallApkRequest {
   PackageName: string | null;
 }
 
+/** 批量Shell命令请求 */
+export interface BatchShellRequest {
+  /** 设备ID列表 */
+  DeviceIdList: string[] | null;
+  /** Shell命令 */
+  ShellCommand: string | null;
+}
+
+/** 批量Shell命令响应结果 */
+export interface BatchShellResult {
+  /** 设备ID */
+  deviceID: string;
+  /** 执行结果 */
+  result: {
+    /** 状态码 0表示成功 */
+    code: number;
+    /** 消息 */
+    message: string;
+    /** Shell命令输出结果 */
+    result: string;
+  };
+}
+
 /** 获取应用列表参数 */
 export interface GetPackageListParams {
   /** 设备ID */
@@ -388,6 +419,24 @@ export interface BatchScreenMirroringInfo {
   isLoading: boolean;
   /** 当前状态 */
   status: 'connecting' | 'playing' | 'paused' | 'error';
+  /** 错误信息 */
+  error: string | null;
+}
+
+/** 批量Shell信息 */
+export interface BatchShellInfo {
+  /** 设备ID */
+  DeviceID: string;
+  /** 设备名称 */
+  DeviceName: string;
+  /** Shell终端URL（如果后端返回） */
+  ShellUrl: string | null;
+  /** 命令输出结果 */
+  output: string;
+  /** 加载状态 */
+  isLoading: boolean;
+  /** 当前状态 */
+  status: 'idle' | 'executing' | 'success' | 'error';
   /** 错误信息 */
   error: string | null;
 }

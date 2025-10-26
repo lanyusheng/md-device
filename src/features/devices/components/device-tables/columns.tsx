@@ -9,7 +9,11 @@ import {
   IconSortDescending,
   IconDeviceDesktop,
   IconBattery,
-  IconWifi
+  IconWifi,
+  IconFolders,
+  IconServer,
+  IconPlugConnected,
+  IconNote
 } from '@tabler/icons-react';
 import { CellAction } from './cell-action';
 
@@ -352,6 +356,126 @@ export const columns: ColumnDef<Device>[] = [
           ) : (
             <div className='invisible mt-1 h-[18px] text-xs'>placeholder</div>
           )}
+        </div>
+      );
+    },
+    enableSorting: true
+  },
+  {
+    accessorKey: 'GroupName',
+    header: ({ column }) => {
+      return (
+        <button
+          className='hover:text-foreground flex items-center gap-1'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          <IconFolders className='h-4 w-4' />
+          <span>分组</span>
+          {column.getIsSorted() === 'asc' ? (
+            <IconSortAscending className='h-4 w-4' />
+          ) : column.getIsSorted() === 'desc' ? (
+            <IconSortDescending className='h-4 w-4' />
+          ) : (
+            <IconArrowsSort className='h-4 w-4 opacity-50' />
+          )}
+        </button>
+      );
+    },
+    cell: ({ row }) => {
+      const groupName = row.getValue('GroupName') as string | null;
+      return (
+        <div className='text-sm'>
+          {groupName || <span className='text-muted-foreground'>未分组</span>}
+        </div>
+      );
+    },
+    enableSorting: true
+  },
+  {
+    accessorKey: 'CabinetID',
+    header: ({ column }) => {
+      return (
+        <button
+          className='hover:text-foreground flex items-center gap-1'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          <IconServer className='h-4 w-4' />
+          <span>机箱编号</span>
+          {column.getIsSorted() === 'asc' ? (
+            <IconSortAscending className='h-4 w-4' />
+          ) : column.getIsSorted() === 'desc' ? (
+            <IconSortDescending className='h-4 w-4' />
+          ) : (
+            <IconArrowsSort className='h-4 w-4 opacity-50' />
+          )}
+        </button>
+      );
+    },
+    cell: ({ row }) => {
+      const cabinetID = row.getValue('CabinetID') as string | null;
+      return (
+        <div className='text-sm'>
+          {cabinetID || <span className='text-muted-foreground'>-</span>}
+        </div>
+      );
+    },
+    enableSorting: true
+  },
+  {
+    accessorKey: 'SlotID',
+    header: ({ column }) => {
+      return (
+        <button
+          className='hover:text-foreground flex items-center gap-1'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          <IconPlugConnected className='h-4 w-4' />
+          <span>卡槽编号</span>
+          {column.getIsSorted() === 'asc' ? (
+            <IconSortAscending className='h-4 w-4' />
+          ) : column.getIsSorted() === 'desc' ? (
+            <IconSortDescending className='h-4 w-4' />
+          ) : (
+            <IconArrowsSort className='h-4 w-4 opacity-50' />
+          )}
+        </button>
+      );
+    },
+    cell: ({ row }) => {
+      const slotID = row.getValue('SlotID') as string | null;
+      return (
+        <div className='text-sm'>
+          {slotID || <span className='text-muted-foreground'>-</span>}
+        </div>
+      );
+    },
+    enableSorting: true
+  },
+  {
+    accessorKey: 'Remark',
+    header: ({ column }) => {
+      return (
+        <button
+          className='hover:text-foreground flex items-center gap-1'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          <IconNote className='h-4 w-4' />
+          <span>备注</span>
+          {column.getIsSorted() === 'asc' ? (
+            <IconSortAscending className='h-4 w-4' />
+          ) : column.getIsSorted() === 'desc' ? (
+            <IconSortDescending className='h-4 w-4' />
+          ) : (
+            <IconArrowsSort className='h-4 w-4 opacity-50' />
+          )}
+        </button>
+      );
+    },
+    cell: ({ row }) => {
+      const remark = row.getValue('Remark') as string | null;
+      return (
+        <div className='max-w-[150px] truncate text-sm'>
+          {remark || <span className='text-muted-foreground'>-</span>}
         </div>
       );
     },

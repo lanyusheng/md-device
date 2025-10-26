@@ -11,6 +11,8 @@ import {
   IconRefresh,
   IconTrash,
   IconFolders,
+  IconTerminal2,
+  IconEdit,
 } from '@tabler/icons-react';
 import { DataTableViewOptions } from '@/components/ui/table/data-table-view-options';
 import { Button } from '@/components/ui/button';
@@ -26,6 +28,7 @@ import { useDeviceStore } from '../../store/device.store';
 import { toast } from 'sonner';
 import { InstallApkDrawer } from '../install-apk-drawer';
 import { BatchAssignGroupDrawer } from '../batch-assign-group-drawer';
+import { BatchEditDrawer } from '../batch-edit-drawer';
 import { Device } from '@/types/api';
 
 interface DeviceToolbarProps<TData> {
@@ -37,6 +40,7 @@ export function DeviceToolbar<TData>({ table }: DeviceToolbarProps<TData>) {
   const { openDrawer, refreshDevices, batchDeleteDevices, isLoading } = useDeviceStore();
   const [installApkDrawerOpen, setInstallApkDrawerOpen] = useState(false);
   const [batchGroupDrawerOpen, setBatchGroupDrawerOpen] = useState(false);
+  const [batchEditDrawerOpen, setBatchEditDrawerOpen] = useState(false);
 
   const tableState = table.getState();
   const isFiltered = tableState.columnFilters.length > 0 || !!tableState.globalFilter;
@@ -84,6 +88,16 @@ export function DeviceToolbar<TData>({ table }: DeviceToolbarProps<TData>) {
     router.push(`/dashboard/batch-screen?devices=${query}`);
   };
 
+  const handleBatchShell = () => {
+    if (selectedDeviceIds.length === 0) {
+      toast.error('请选择至少一个设备');
+      return;
+    }
+
+    const query = encodeURIComponent(selectedDeviceIds.join(','));
+    router.push(`/dashboard/batch-shell?devices=${query}`);
+  };
+
   return (
     <div className='flex w-full items-start justify-between gap-2 p-1'>
       <div className='flex flex-1 flex-wrap items-center gap-2'>
@@ -128,6 +142,20 @@ export function DeviceToolbar<TData>({ table }: DeviceToolbarProps<TData>) {
               >
                 <IconFolders className='mr-2 h-4 w-4' />
                 批量分组
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setBatchEditDrawerOpen(true)}
+                disabled={isLoading}
+              >
+                <IconEdit className='mr-2 h-4 w-4' />
+                批量编辑
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={handleBatchShell}
+                disabled={isLoading || selectedDeviceIds.length === 0}
+              >
+                <IconTerminal2 className='mr-2 h-4 w-4' />
+                批量Shell
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
@@ -193,6 +221,12 @@ export function DeviceToolbar<TData>({ table }: DeviceToolbarProps<TData>) {
       <BatchAssignGroupDrawer
         open={batchGroupDrawerOpen}
         onOpenChange={setBatchGroupDrawerOpen}
+        devices={selectedDevices}
+      />
+
+      <BatchEditDrawer
+        open={batchEditDrawerOpen}
+        onOpenChange={setBatchEditDrawerOpen}
         devices={selectedDevices}
       />
     </div>

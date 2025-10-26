@@ -12,11 +12,11 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // 如果已登录，访问登录页则重定向到 dashboard
+  // 如果已登录，访问登录页则重定向到设备管理
   if (pathname === '/login') {
     const isAuthenticated = request.cookies.get('auth-token');
     if (isAuthenticated) {
-      return NextResponse.redirect(new URL('/dashboard', request.url));
+      return NextResponse.redirect(new URL('/dashboard/devices', request.url));
     }
   }
 
